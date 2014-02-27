@@ -1,11 +1,18 @@
 $(function() {
 	console.log("ready ...");
+	// init datatable
 	initDataTable();
+	// init newBtn for bootstrap dialog
 	$("#newBtn").on("click", function(){
 		$("#testDialog").modal("show");
 		$("#testDialog .modal-footer .btn").off("click").on("click", function(){
 			$("#testDialog").modal("hide");
 		});
+	});
+	// init dialog
+	$("#td").dialog({autoOpen: false, buttons: [{"text": "close", click: function(){$(this).dialog("close")}}]});
+	$("#openDialogBtn").on("click", function(){
+		$("#td").dialog("open");
 	});
 });
 
