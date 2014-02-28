@@ -18,9 +18,11 @@
 <body>
 
 <div id="main">
+  <!-- button test -->
 	<div id="btnArea">
 		<button id="newBtn" type="button" class="btn btn-primary" data-loading-text="Loading...">Add New</button>
 	</div>
+  <!-- button group test -->
 	<div class="btn-group">
 	  <button class="btn">Action</button>
 	  <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -34,13 +36,18 @@
         <li><a tabindex="-1" href="#" id="openDialogBtn">open an JqueryUi Dialog</a></li>
 	  </ul>
 	</div>
+  <!-- link and event prevent test -->
   <div>
     <a id="testLink" onclick="console.log('inline click log .!')" href="javascript: console.log('href console log ..')">test alert link ~</a>
   </div>
   <div>
     <a id="testLink2" href="/a/b">test alert link2 ~</a>
   </div>
+  <!-- datatable test -->
 	<table id="example"></table>
+  <!-- date picker test -->
+  <br/>
+  <input type="text" name="picker" value="picker" id="picker"/>
 </div>
 <!--modal dialog-->
 <div id="testDialog" class="modal hide fade">
