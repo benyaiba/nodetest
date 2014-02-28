@@ -1,12 +1,25 @@
 $(function() {
 	console.log("ready ...");
+  // init datatable
 	initDataTable();
+  // init dialog button "newBtn"
 	$("#newBtn").on("click", function(){
 		$("#testDialog").modal("show");
 		$("#testDialog .modal-footer .btn").off("click").on("click", function(){
 			$("#testDialog").modal("hide");
 		});
 	});
+  // init group button
+  $(".btn-group").delegate("a", "click", function(){
+    console.log($(this).html());
+  });
+  // init test link
+  $("#testLink").off("click").on("click", function(){
+    console.log("test link clicked !");
+  });
+  $("#testLink2").off("click").on("click", function(){
+    return false;
+  });
 });
 
 function initDataTable() {
