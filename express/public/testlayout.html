@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>user password console</title>
+	<script src="./js/jquery-1.11.0.js"></script>
+	<script src="./js/jquery.dataTables.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="./css/jquery.dataTables.css">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/bootstrap-responsive.css">
+<style>
+div{
+<!--border:1px solid black;-->
+border:none;
+}
+
+#t{
+width: 200px;
+<!--transition-property: background;-->
+<!--transition-duration: 1s;-->
+<!--transition-timing-function: linear;-->
+<!--transition-delay: .5s;-->
+}
+<!--#t:hover-->
+<!--{-->
+<!--background: black;-->
+<!--transition-property: background 1 linear .5-->
+<!--}-->
+.tjs{
+background: black !important;
+<!--transition-property: background 1 linear .5-->
+}
+
+.tjs2{
+background: white;
+transition: background .5s linear 0s;
+}
+</style>
+<script>
+$(function(){
+	$("#t").on("click", function(){
+		$(this).toggleClass("tjs");
+	});
+});
+</script>
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="" style="background-color: lightblue;">
+      11111111
+    </div>
+    <div class="" style="background-color: pink;">
+      rrrrrrrr
+    </div>
+  </div>
+</div>
+<br/>
+<div id="t" class="tjs2" style="border: 1px solid blue;">
+aaaaaaa
+</div>
+</body>
+</html>
