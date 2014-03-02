@@ -27,6 +27,11 @@ $(function() {
   });
   // init datepicker
   $("#picker").datepicker();
+  // init my plugin test
+  $("#pluginTest").colorIt({color:"green"}).showLinkHref2(function(){
+  	  console.log("-- callback in showLinkHref2 --");
+  	  console.log(this, $(this));
+  });
 });
 
 function initDataTable() {
