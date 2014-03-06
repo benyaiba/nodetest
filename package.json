@@ -1,0 +1,7 @@
+{
+  "name": "app",
+  "dependencies": {
+    "mysql": "2.1.0",
+    "xtend": "2.1.2"
+  }
+}
