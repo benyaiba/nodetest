@@ -2,6 +2,7 @@ var extend = require("xtend");
 var mysql = require('mysql');
 var baseDatas = require('baseData');
 var Deferred = require("Deferred");
+var async = require("async");
 
 var connection = mysql.createConnection({
   host     : '192.168.196.10',
@@ -25,26 +26,37 @@ var schedule_base = extend(baseDatas.schedule_base, {mads_id: params.mads_id});
 getOrInsertSchedule("09:00:00", "10:10:00", connection);
 
 // create monitor
-function createMonitor(){
-  createOneMonitor(params.monitor_name, connection).done(function(monitor_id){
-    for(var i = 0; i< params.schedule_times.length(); i++){
-      var schedule_times = params.schedule_times[i];
-      getSchedule(schedule_times[0], schedule_times[1], connection).done(function(schedule_id){
-        var air_time = params.air_times[i];
+function createMonitor() {
+  // create monitor
+  createOneMonitor(params.monitor_name, connection).done(function(monitor_id) {
+    async.each(params.schedule_times,
+    function(schedule_times, next) {
+      var i = params.schedule_times.indexOf(schedule_times);
+      var air_time = params.air_times;
+      // create schedule
+      getSchedule(schedule_times[0], schedule_times[1], connection).done(function(schedule_id) {
         var start_datetime = air_time[i] + " " + schedule_times[0];
         var end_datetime = air_time[i] + " " + schedule_times[1];
-        relateMonitorSchedule(monitor_id,schedule_id, air_time, start_datetime, end_datetime, connection).done(function(){
-          connection.commit(function(err){
-            if(!err){
-              connection.end();
-              console.log("++ all done ...");
-              console.log("------- seperate line index: " + i + " ----------");
-            }
-          });
+        // relate monitor and schedule
+        relateMonitorSchedule(monitor_id, schedule_id, air_time, start_datetime, end_datetime, connection).done(function() {
+          console.log("++++ one suit done... ++++");
+          next();
         });
       });
-    }
-
+    },
+    function(err) {
+      if(err){
+        console.log("err!!!");
+        progress.exit();
+      }
+      // when all is done
+      connection.commit(function(err) {
+        if (!err) {
+          connection.end();
+          console.log("++ all done ...");
+        }
+      });
+    });
   });
 }
 
@@ -89,8 +101,8 @@ function createOneMonitor(monitor_name, conn){
 function getSchedule(start_time, end_time,conn) {
   var dfd = new Deferred();
   getOrInsertSchedule(start_time, end_time,conn).done(function(schedule_id){
-  	// create schedule program relation
-  	relateScheduleProgram(schedule_id, start_time, end_time, conn).done(function(){
+    // create schedule program relation
+    relateScheduleProgram(schedule_id, start_time, end_time, conn).done(function(){
       dfd.resolve(schedule_id);
     });
   });
