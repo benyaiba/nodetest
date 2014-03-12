@@ -6,8 +6,8 @@ var datas = {
   "airtime_status": "1",
   "start_datetime": "2014-02-25 09:00:00",
   "end_datetime": "2014-02-25 10:00:00",
-  "update_time": "2014-03-08 03:08:00,
-  "create_time": "2014-03-08 03:08:00
+  "update_time": "2014-03-08 03:08:00",
+  "create_time": "2014-03-08 03:08:00"
 },
 
 "relay_schedule_program": {
@@ -16,8 +16,8 @@ var datas = {
   "start_time": "04:00:00",
   "end_time": "05:00:00",
   "program_id": "2",
-  "update_time": "2014-03-08 03:08:00,
-  "create_time": "2014-03-08 03:08:00
+  "update_time": "2014-03-08 03:08:00",
+  "create_time": "2014-03-08 03:08:00"
 },
 
 "program_base":{
@@ -26,8 +26,8 @@ var datas = {
     "program_time": "15",
     "program_type": "adnw",
     "soft_delete_flag": "open",
-    "update_time": "2014-03-08 03:08:00,
-    "create_time": "2014-03-08 03:08:00
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
   },
   
 "monitor_base":{
@@ -46,8 +46,8 @@ var datas = {
     "special_cost": "300.00000000",
     "standard_time": "00:00:00",
     "soft_delete_flag": "open",
-    "update_time": "2014-03-08 03:08:00,
-    "create_time": "2014-03-08 03:08:00
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
   },
 
 "schedule_base" :{
@@ -57,8 +57,8 @@ var datas = {
     "end_time": "10:00:00",
     "fixed_flag": "fixed",
     "soft_delete_flag": "open",
-    "update_time": "2014-03-08 03:08:00,
-    "create_time": "2014-03-08 03:08:00
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
   }
 
 };
