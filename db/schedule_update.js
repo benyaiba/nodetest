@@ -38,7 +38,6 @@ function main(){
   var end_time = params.end_time;
   var program_times = params.program_times;
   updateSchedule(schedule_id, start_time, end_time, connection).done(function(){
-    console.log("1111111111", schedule_id, start_time, end_time);
     getMadsId(schedule_id, connection).done(function(mads_id){
       clearScheduleProgramRelate(schedule_id, connection).done(function(){
         async.eachSeries(program_times, function(program_time, next){
