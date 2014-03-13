@@ -16,8 +16,8 @@ connection.connect();
 
 var params = {
   mads_id: 114,
-  air_times: ["2014-03-22", "2014-03-23", "2014-03-24"],
-  schedule_times: [["09:00:00", "10:00:00"], ["10:00:00", "11:00:00"], ["12:00:00","15:00:00"]],
+  air_times: ["2014-03-23"],
+  schedule_times: [["00:01:00", "00:08:00"]],
   monitor_name: "monitor"
 }
 var program_base = extend(baseDatas.program_base, {mads_id: params.mads_id});
