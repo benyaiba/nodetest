@@ -14,10 +14,11 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+FORCE_INSERT_SCHEDULE = true;
 var params = {
   mads_id: 114,
-  air_times: ["2014-03-23"],
-  schedule_times: [["00:01:00", "00:08:00"]],
+  air_times: ["2014-03-24"],
+  schedule_times: [["09:00:00", "10:00:00"]],
   monitor_name: "monitor"
 }
 var program_base = extend(baseDatas.program_base, {mads_id: params.mads_id});
@@ -136,7 +137,7 @@ function getOrInsertSchedule(start_time, end_time, conn){
   var scheduleSearchSql = "select * from schedule " +
      "where start_time = ? and end_time = ? and fixed_flag = 'fixed' and soft_delete_flag = 'open' and mads_id = ?";
   conn.query(scheduleSearchSql, [start_time, end_time, params.mads_id], function(err, result){
-    if(result.length == 0){
+    if(result.length == 0 || FORCE_INSERT_SCHEDULE == true){
       console.log("++ schedule not found, try to insert one.", [start_time, end_time]);
       var insertSchedule = extend(schedule_base, {
         start_time: start_time,
@@ -148,7 +149,8 @@ function getOrInsertSchedule(start_time, end_time, conn){
           console.log("insert schedule failed", err);
         }else{
           var schedule_id = result.insertId;
-          console.log("++ insert schedule OK ... schedule_id : " + schedule_id);
+          var forcePrefix = FORCE_INSERT_SCHEDULE == true ? "[force] ": "";
+          console.log("++ " + forcePrefix + "insert schedule OK ... schedule_id : " + schedule_id);
           dfd.resolve(schedule_id);
         }
       })

@@ -15,11 +15,11 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var params = {
-  schedule_id: 212,
+  schedule_id: 215,
   start_time: "08:00:00",
-  end_time: "12:00:00",
-  relay_start_times: ["08:00:00", "09:00:00", "10:00:00"],
-  program_times: [15,45,30]
+  end_time: "20:00:00",
+  relay_start_times: ["07:00:00", "18:00:00", "19:00:00"],
+  program_times: [15,45,105]
 }
 var program_base = baseDatas.program_base;
 
@@ -40,11 +40,13 @@ function main(){
   updateSchedule(schedule_id, start_time, end_time, connection).done(function(){
     getMadsId(schedule_id, connection).done(function(mads_id){
       clearScheduleProgramRelate(schedule_id, connection).done(function(){
+        var index = 0;
         async.eachSeries(program_times, function(program_time, next){
           getProgram(mads_id, program_time, connection).done(function(program_id){
-            var startEndTime = getStartEndTime(program_time);
+            var startEndTime = getStartEndTime(index);
             var pro_start_time = startEndTime[0];
             var pro_end_time = startEndTime[1];
+            index++;
             relateScheduleProgram(schedule_id, pro_start_time, pro_end_time, program_id, connection).done(function(){
               next();
             });
@@ -148,7 +150,7 @@ function relateScheduleProgram(schedule_id, start_time, end_time, program_id, co
   conn.query(sql, sqlParams, function(err, result){
     if(err){
       conn.rollback();
-      console.log("err", err);
+      console.log("err insert relate_schedule_program ", err);
     }else{
       var iId = result.insertId;
       console.log("++ insert relate_schedule_program ok ..., id : " + iId);
@@ -174,13 +176,28 @@ function clearScheduleProgramRelate(schedule_id, conn){
   return dfd.promise();
 }
 
-function getStartEndTime(program_time){
+function getStartEndTime(index){
   var relay_start_times = params.relay_start_times;
   var program_times = params.program_times;
-  var index = program_times.indexOf(program_time);
+  var program_time = program_times[index];
+  var timeStr = getTimeStr(program_time);
   var start_time = relay_start_times[index];
-  var end_time = start_time.substring(0, start_time.length - 2) + program_time;
+  var end_time = start_time.substring(0, start_time.length - timeStr.length) + timeStr;
   return [start_time, end_time];
+}
+
+function getTimeStr(secondStr){
+  var second = parseInt(secondStr, 10);
+  if(second < 60){
+    return secondStr + "";
+  }else{
+    var minite = parseInt(second / 60, 10);
+    var second = second % 60;
+    if((second + "").length == 1){
+      second = "0" + second;
+    } 
+    return minite + ":" + second;
+  }
 }
 
 
