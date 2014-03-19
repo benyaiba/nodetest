@@ -31,12 +31,58 @@ function drawLine(x, y, x2,y2, ctx){
   ctx.stroke();
 }
 function drawRandomLine(){
-  var width = 300;
-  var height = 300;
+  var width = 200;
+  var height = 200;
   var x = random(width);
   var y = random(height);
   var x2 = random(width);
   var y2 = random(height);
   var ctx = $("#testCanvas2").get(0).getContext("2d");
   drawLine(x, y, x2,y2, ctx);
+}
+
+//================
+
+$(function(){
+  fillCanvas();
+  bindEvent();
+});
+var nodes = [{
+  x: 20,
+  y: 100,
+  w: 50,
+  h: 100,
+  color: "green"
+},{
+  x: 100,
+  y: 50,
+  w: 60,
+  h: 150,
+  color: "blue"
+  }];
+  
+function fillCanvas(){
+  var ctx = $("#testCanvas3").get(0).getContext("2d");
+  nodes.forEach(function(item){
+    ctx.fillStyle = item.color;
+    ctx.fillRect(item.x, item.y, item.w, item.h);
+  });
+}
+
+function bindEvent(){
+  $("#testCanvas3").on("click", function(evt){
+    var cx = $(this).offset().left;
+    var cy = $(this).offset().top;
+    var ox = evt.pageX;
+    var oy = evt.pageY;
+    var x = ox - cx;
+    var y = oy - cy;
+    nodes.forEach(function(item){
+      if((x > item.x && x < (item.x + item.w))
+        &&(y > item.y && y < (item.y + item.h))){
+          console.log("in " + item.color + " -- ", cx, cy, ox, oy, x, y);
+        }
+    })
+  });
+  
 }
