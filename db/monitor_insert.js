@@ -16,9 +16,9 @@ connection.connect();
 
 FORCE_INSERT_SCHEDULE = true;
 var params = {
-  mads_id: 114,
-  air_times: ["2014-03-24"],
-  schedule_times: [["09:00:00", "10:00:00"]],
+  mads_id: 80,
+  air_times: ["2014-03-31"],
+  schedule_times: [["08:00:00", "20:00:00"]],
   monitor_name: "monitor"
 }
 var program_base = extend(baseDatas.program_base, {mads_id: params.mads_id});

@@ -15,11 +15,11 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var params = {
-  schedule_id: 215,
+  schedule_id: 221,
   start_time: "08:00:00",
   end_time: "20:00:00",
-  relay_start_times: ["07:00:00", "18:00:00", "19:00:00"],
-  program_times: [15,45,105]
+  relay_start_times: ["04:00:00", "08:00:00", "19:00:00"],
+  program_times: [15,45,30]
 }
 var program_base = baseDatas.program_base;
 
