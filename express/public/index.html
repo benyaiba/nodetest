@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>user password console</title>
+	<title>index</title>
 	<link rel="stylesheet" href="./css/jquery-ui-1.10.4.custom.css">
 	<link rel="stylesheet" href="./css/jquery.dataTables.css">
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -11,97 +11,33 @@
 	<script src="./js/jquery-ui-1.10.4.custom.js"></script>
 	<script src="./js/jquery.dataTables.min.js"></script>
 	<script src="./js/bootstrap.min.js"></script>
+  
+  <!-- app js files -->
 	<script src="./js/jquery-myplugintest.js"></script>
+	<script src="./js/app/common.js"></script>
 	<script src="./index.js"></script>
+	<script src="./js/app/main.js"></script>
+  <script src="./js/app/testdraw.js"></script>
 
+<style>
+</style>
 </head>
 
 <body>
-
-<div id="main">
-  <!-- button test -->
-	<div id="btnArea">
-		<button id="newBtn" type="button" class="btn btn-primary" data-loading-text="Loading...">Add New</button>
-	</div>
-	<div id="btnArea">
-		<button id="formDialogBtn" type="button" class="btn btn-primary" data-loading-text="Loading...">open form dialog</button>
-	</div>
-  <!-- button group test -->
-	<div class="btn-group">
-	  <button class="btn">Action</button>
-	  <button class="btn dropdown-toggle" data-toggle="dropdown">
-	    <span class="caret"></span>
-	  </button>
-	  <ul class="dropdown-menu">
-        <li><a tabindex="-1" href="#">Action</a></li>
-        <li><a tabindex="-1" href="#">Another action</a></li>
-        <li><a tabindex="-1" href="#">Something else here</a></li>
-        <li class="divider"></li>
-        <li><a tabindex="-1" href="#" id="openDialogBtn">open an JqueryUi Dialog</a></li>
-	  </ul>
-	</div>
-  <!-- link and event prevent test -->
-  <div>
-    <a id="testLink" onclick="console.log('inline click log .!')" href="javascript: console.log('href console log ..')">test alert link ~</a>
-  </div>
-  <div>
-    <a id="testLink2" href="/a/b">test alert link2 ~</a>
-  </div>
-  <!-- datatable test -->
-	<table id="example"></table>
-  <!-- date picker test -->
-  <br/>
-  <input type="text" name="picker" value="picker" id="picker"/>
-  <!-- my plugin test -->
-  <div id="pluginTest">
-  	<a href="www.baidu.com"></a>
-  	<div style="maring-left: 10px"><a href="http://learn.jquery.com">learn jquery !</a></div>
-  </div>
+<div id="header">
+  <h3>THIS IS HEADER .</h3>
 </div>
-<!--modal dialog-->
-<div id="testDialog" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>对话框标题</h3>
-  </div>
-  <div class="modal-body">
-    <p>Hello World</p>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn">关闭</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
-  </div>
+<div id="left">
+  <ul>
+    <li><a href="main">main</a></li>
+    <li><a href="testdraw">testdraw</a></li>
+    <li></li>
+  </ul>
 </div>
-
-<!--modal dialog-->
-<div id="formDialog" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>form test</h3>
-  </div>
-  <div class="modal-body">
-    <form id="testForm" action="/user" method="POST">
-      <input type="text" name="user[0][userName]" value="" />
-      <input type="text" name="user[0][userAge]" value="" />
-      <br/>
-      <input type="text" name="user[1][userName]" value="" />
-      <input type="text" name="user[1][userAge]" value="" />
-      <br>
-      <input type="file" name="tfile" id="tfile"/>
-    </form>
-  </div>
-  <div id="imgPreview">
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn colseBtn">关闭</a>
-    <a href="#" class="btn btn-primary submitBtn">提交</a>
-  </div>
+<div id="content">
 </div>
-
-<!-- jquery ui dialog -->
-<div id="td" title="this is test dialog">
-	this is on jquery UI test dialog
+<div id="footer">
+  <h5>copy right 2014 .</h5>
 </div>
-
 </body>
 </html>

@@ -1,0 +1,32 @@
+#header{
+ position:absolute;
+ top:0px;
+ height: 100px;
+ width:100%;
+ background-color: green;
+}
+#footer{
+ height:40px;
+ position:absolute;
+ bottom: 0px;
+ left: 150px;
+ right:0px;
+ text-align:center;
+ background-color: gray;
+}
+#left{
+ position:absolute;
+ left:0px;
+ top: 100px;
+ bottom:0px;
+ width:150px;
+ background-color: lightblue;
+}
+#content{
+ position:absolute;
+ left: 150px;
+ right:0px;
+ bottom: 40px;
+ top:100px;
+ overflow: auto;
+}

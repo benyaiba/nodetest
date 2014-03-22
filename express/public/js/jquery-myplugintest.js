@@ -19,6 +19,15 @@
 			}
 		});
 	}
+  
+  // left side bar
+  $.fn.leftSideBar = function(){
+    this.find("a").on("click", function(){
+      var h = $(this).attr("href");
+      loadPage(h);
+      return false;
+    });
+  }
 	
 	$.fn.colorIt.params = {
 		color: "red"

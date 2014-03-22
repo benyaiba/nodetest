@@ -1,4 +1,16 @@
-$(function(){
+var testdrawInterval = null;
+
+function testdrawDestroy(){
+  clearInterval(testdrawInterval);
+}
+
+function testdrawInit(){
+  doInit1();
+  doInit2();
+  doInit3();
+}
+
+function doInit1(){
   var cDom = $("#testCanvas").get(0);
   var ctx = cDom.getContext("2d");
   ctx.fillStyle = "#ff0000";
@@ -13,12 +25,12 @@ $(function(){
   ctx.stroke();
   
   ctx.font = "20px simsun";
-  ctx.fillText("时间都去哪儿了？",10,20);
-});
+  ctx.fillText("时间都去哪儿了？",10,20);  
+}
 
-$(function(){
-  setInterval(drawRandomLine, 300);
-});
+function doInit2(){
+  testdrawInterval = setInterval(drawRandomLine, 300);
+}
 
 function random(value){
   return Math.random() * value;
@@ -42,11 +54,10 @@ function drawRandomLine(){
 }
 
 //================
-
-$(function(){
+function doInit3(){
   fillCanvas();
   bindEvent();
-});
+}
 var nodes = [{
   x: 20,
   y: 100,
