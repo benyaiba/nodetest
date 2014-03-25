@@ -105,4 +105,13 @@ function doInit() {
   $("#btn").on("click", function(){
     redraw();
   });
+  
+  // resize
+  // need require "jquery.plot.resize.js" in index.html
+  $("#chartArea").resizable({
+			maxWidth: 900,
+			maxHeight: 500,
+			minWidth: 450,
+			minHeight: 250,
+		});
 }
