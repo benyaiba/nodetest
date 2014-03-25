@@ -33,8 +33,8 @@ var datas = {
 "monitor_base":{
     "mads_id": "1",
     "monitor_name": "自動monitor",
-    "monitor_size_id": "1",
-    "monitor_size": "1280*1024",
+    "monitor_size_id": "8",
+    "monitor_size": "1980*1024",
     "monitor_category_id": "1",
     "area_id": "1",
     "special_area_id": "10",
