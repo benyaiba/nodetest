@@ -22,5 +22,9 @@ app.post("/user", function(req, res){
   res.json({result: "good!"});
 });
 
+app.post("/user2", function(req, res){
+  console.log("---- ", req.body);
+});
+
 app.listen(3000);
 console.log("start at 3000 ...");
