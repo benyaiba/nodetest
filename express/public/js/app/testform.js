@@ -37,6 +37,48 @@ function testformInit(){
     doAjax(null, $("#form5").serialize());
     return false;
   });
+  
+  // file upload "onchange"
+  $("#uf").on("change", function(evt){
+    var f = evt.target.files[0];
+    var fr = new FileReader();
+    fr.onload = function(evt){
+      $("<img src='' style='width:300px;height:200px'/>")
+        .attr("src", evt.target.result)
+        .appendTo($("#result6"));
+    };
+    fr.readAsDataURL(f)
+  });
+  // send file to server
+  $("#btn6").on("click", function(){
+    var d = new FormData($("#form6").get(0));
+    d.append("age",30);
+    d.append("uploadFile", $("#uf").get(0).files[0]);
+    $.ajax({
+      url:"/imgUpload",
+      method: "POST",
+      data: d,
+      processData : false,
+      contentType: false,
+      dataType: "json",
+      success: function(result){
+//        var fr = new FileReader();
+//        fr.onload = function(evt){
+//          var url = evt.target.result;
+//          $("<img src='' style='width:300px;height:200px'/>")
+//            .attr("src", "" + evt.target.result)
+//            .appendTo($("#result6"));
+//        };
+//        console.log(new Blob(result.result));
+//        fr.readAsDataURL(new Blob(result.result));
+
+          $("<img src='' style='width:300px;height:200px'/>")
+            .attr("src", "data:image/jpeg;base64," + result.result)
+            .appendTo($("#result6"));
+      }
+    });
+    return false;
+  });
 }
 
 function doAjax(url, data){

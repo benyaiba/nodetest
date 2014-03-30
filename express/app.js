@@ -1,5 +1,6 @@
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
 
 var app = express();
 
@@ -24,6 +25,20 @@ app.post("/user", function(req, res){
 
 app.post("/user2", function(req, res){
   console.log("---- ", req.body);
+});
+
+app.post("/imgUpload", function(req, res){
+  console.log("---- ", req.files);
+  console.log("---- ", req.body);
+  
+  var filePath = path.join("c:", "tmp", "tubiao.jpg");
+  fs.readFile(filePath, function(err, data){
+    if (err) {
+    	console.log("err!!!", err)
+    }else{
+      res.json({result: data.toString("base64")});
+    }
+  });
 });
 
 app.listen(3000);
