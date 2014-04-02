@@ -15,11 +15,12 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var params = {
-  mads_id: 111
+  mads_id: 103,
   start_date: "2014-04-01",
   end_date: "2014-04-03",
 }
 var program_base = baseDatas.program_base;
+var creative_summary_base = baseDatas.creative_summary;
 
 connection.beginTransaction(function(err){
   if(err){
@@ -33,7 +34,7 @@ var conn = connection;
 var days = getDaysInTerm(params.start_date, params.end_date);
 function main(){
   var madsId = params.madsId;
-  var sql = "select * from structs where mads_id = ? and open_flag = 'open'";
+  var sql = "select * from struct left join campaign on struct.campaign_id = campaign.campaign_id where campaign.mads_id = ? and struct.open_flag = 'open' and campaign.open_flag ='open'";
   conn.query(sql, [madsId], function(err,result){
     if(err){
       console.log("err", err);
@@ -66,7 +67,7 @@ function main(){
 
 function doOneStruct(madsId, structId){
   var dfd = new Deferred();
-  var sql = "select * from creative where struct_id = ? and delete_flag = 'open'";
+  var sql = "select * from creative c join relay_struct_creative rsc on  rsc.creative_id = c.creative_id join structs s on s.struct_id = rsc.struct_id where s.struct_id = ? and s.delete_flag = 'open'";
   var sqlParams = [structId];
   conn.query(sql, sqlParams, function(err, result){
     if(err){
@@ -92,7 +93,7 @@ function doOneStruct(madsId, structId){
               console.log("err!!",err);
             }
           });
-    }
+    })
   });
   return dfd.promise();
 }
@@ -117,14 +118,19 @@ function doOneCreative(madsId, structId, creativeId){
 function doInsert(madsId, structId, creativeId, oneDayStr){
   var dfd = new Deferred();
   // TODO
-  var sql = "insert into ...";
-  var sqlParams = {};
+  var sql = "insert into creative_summary set ?";
+  var sqlParams = extend(creative_summary_base, {
+    mads_id: madsId,
+    struct_id: structId,
+    creative_id: creativeId,
+    target_date: oneDayStr
+  });
   conn.query(sql, sqlParams, function(err, result){
     if(err){
       conn.rollback();
       console.log("err", err);
     }else{
-      console.log("++ ");
+      console.log("++ insert creative_summary ok ... target_date: " + oneDayStr + " creative_id:" + creativeId);
       dfd.resolve();
     }
   });

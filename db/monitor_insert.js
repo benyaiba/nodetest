@@ -17,7 +17,7 @@ connection.connect();
 FORCE_INSERT_SCHEDULE = true;
 var params = {
   mads_id: 80,
-  air_times: ["2014-04-07"],
+  air_times: ["2014-04-11"],
   schedule_times: [["08:00:00", "20:00:00"]],
   monitor_name: "monitor"
 }

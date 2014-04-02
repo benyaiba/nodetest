@@ -59,8 +59,32 @@ var datas = {
     "soft_delete_flag": "open",
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
-  }
+  },
+    
+"creative_summary" : {
+      "target_date" : "2014-02-04",
+      "aired_time" : "5640",
+      "creative_id" : "1",
+      "gross" : "101318.98400000",
+      "impression" : "124",
+      "mads_id" : "271",
+      "struct_id" : "65",
+      "create_time" : "2014-03-08 03:08:00",
+      "update_time" : "2014-03-08 03:08:00"
+    },
+      
+"struct_summary" : {
+      "target_date" : "2014-01-04",
+      "aired_time" : "45",
+      "gross" : "130.00000000",
+      "impression" : "10",
+      "mads_id" : "2",
+      "struct_id" : "2",
+      "create_time" : "2014-03-08 03:08:00",
+      "update_time" : "2014-03-08 03:08:00"
+    }
 
 };
+
 
 exports.datas = datas;
