@@ -45,21 +45,60 @@ app.post("/imgUpload", function(req, res){
 });
 
 app.get("/person", function(req, res){
-  db.collection("person").find().toArray(function(err, result){
+  console.log("---- begin ----");
+  console.log(req.query);
+  console.log("----- end -----");
+  
+  // sort
+  var sortArr = getSortArray(req.query);
+
+  db.collection("person").find({},{sort: sortArr}).toArray(function(err, result){
     if(err) throw err;
-    var resultArr = [];
-    result.forEach(function(item){
-      resultArr.push([item.first, item.last, item.age]);
-    });
+    
+    // search
+    var searchKey = req.query.sSearch;
+    var searchResult = filterBySearch(result, searchKey);
+    
+    // pagination
+    var offset = parseInt(req.query.iDisplayStart,10);
+    var limit = parseInt(req.query.iDisplayLength,10);
+    
     var ret = {
       iTotalRecords: result.length,
-      iTotalDisplayRecords: 10,
-      sEcho: 10,
-      aaData: resultArr
+      iTotalDisplayRecords: searchResult.length,
+      sEcho: parseInt(req.query.sEcho,10),
+      aaData: searchResult.slice(offset, offset + limit)
     }
     res.json(ret);
   });
 });
+
+function filterBySearch(result, searchKey){
+  return result.filter(function(record){
+    for(var key in record){
+      if(key.indexOf("_") == 0){
+        continue;
+      }
+      if(record[key] != null && (record[key] + "").indexOf(searchKey) != -1){
+        return true;
+      }
+    }
+    return false;
+  });
+}
+
+function getSortArray(params){
+  var retArr = [];
+  if(params['iSortCol_0']){
+    var sortColumnNumber = parseInt(params['iSortingCols'],10);
+    for(var i = 0; i< sortColumnNumber; i++){
+      var sortColName = params["mDataProp_" + params['iSortCol_' + i]];
+      var sortDir = params['sSortDir_' + i];
+      retArr.push([sortColName, sortDir]);
+    }
+  }
+  return retArr;
+}
 
 app.listen(3000);
 console.log("start at 3000 ...");

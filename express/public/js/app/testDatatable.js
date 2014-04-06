@@ -21,22 +21,31 @@ function testDatatableInit(){
 }
 
 // back-end table init
-function initDataTable2(){
-  $("#table2").dataTable({
+function initDataTable2() {
+	$("#table2").dataTable({
 		"bProcessing": true,
 		"bServerSide": true,
+		"bFilter": true,
+		// infinity scroll begin
+//		"bScrollInfinite": true,
+//		"bScrollCollapse": true,
+//		"sScrollY": "200px",
+		// end
+    "sPaginationType": "full_numbers",
 		"sAjaxSource": "../person",
-    aoColumns:[{
-      mData: "first",
-      sTitle: "First"
-    },{
-      mData: "last",
-      sTitle: "Last"
-    },{
-      mData: "age",
-      sTitle: "Age"
-    }]
-  });
+		aoColumns: [{
+			mData: "first",
+			sTitle: "First"
+		},
+		{
+			mData: "last",
+			sTitle: "Last"
+		},
+		{
+			mData: "age",
+			sTitle: "Age"
+		}]
+	});
 }
 
 // frond-end dataTable
