@@ -39,9 +39,9 @@ function insertRecords(){
   return dfd.promise();
 }
 
-//insertRecords().done(function(){
-//  db.collection("person").count(function(err, result){
-//    console.log("total:" + result);
-//  });
-//});
+insertRecords().done(function(){
+  db.collection("person").count(function(err, result){
+    console.log("total:" + result);
+  });
+});
 
