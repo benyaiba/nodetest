@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var params = {
-  schedule_id: 231,
+  schedule_id: 233,
   start_time: "08:00:00",
   end_time: "20:00:00",
   relay_start_times: ["04:00:00", "08:00:00", "19:00:00"],
