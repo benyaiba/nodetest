@@ -16,7 +16,9 @@ function loadPage(pageName){
     dataType: "html",
     success: function(htmlContent){
       $("#content").html(htmlContent);
-      window[initMethodName]();
+      if(window[initMethodName]){
+        window[initMethodName]();
+      };
       currentPage = pageName;
     },
     error: function(err){
