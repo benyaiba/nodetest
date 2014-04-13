@@ -32,5 +32,38 @@
 	$.fn.colorIt.params = {
 		color: "red"
 	}
+  
+  // extend for method : "$.outerHTML()"
+  $.fn.outerHTML = function() {
+    return $(this).clone().wrap('<div></div>').parent().html();
+  }
+  
+  // extends jquery to implements method: serializeObject
+  $.fn.serializeObject = function() {
+    var arrayData, objectData;
+    arrayData = this.serializeArray();
+    objectData = {};
+
+    $.each(arrayData, function() {
+      var value;
+
+      if (this.value != null) {
+        value = this.value;
+      } else {
+        value = '';
+      }
+
+      if (objectData[this.name] != null) {
+        if (!objectData[this.name].push) {
+          objectData[this.name] = [objectData[this.name]];
+        }
+
+        objectData[this.name].push(value);
+      } else {
+        objectData[this.name] = value;
+      }
+    });
+    return objectData;
+  };
 })(jQuery);
 

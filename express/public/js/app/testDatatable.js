@@ -18,6 +18,62 @@ jQuery.fn.dataTableExt.oSort['custom-desc'] = function(x,y) {
 function testDatatableInit(){
   initDataTable1c();
   initDataTable2();
+  initDataTable3();
+}
+
+function initDataTable3(){
+  $("#table3").dataTable({
+    bLengthChange: false,
+    aoColumnDefs:[{
+      aTargets: [2],
+      mRender: function(data, type, rowData){
+        if(type == "display"){
+          return "<input type='text' name='' value='" + data + "'>";
+        }else if(type == "sort"){
+          return parseInt(data,10);
+        }
+        return data;
+      }
+    },{
+        aTargets: [3],
+        mRender: function(data, type, rowData){
+          return $("<input type='button' name='button' value='delete' />").addClass("actionDelete").outerHTML();
+        }
+   },{
+     aTargets: [2,3],
+     sClass: "layout1AlignRight"
+   }
+   ],
+    aoColumns:[{
+      mData: "first"
+    },{
+      mData: "last"
+    },{
+      mData: "age"
+    }, {
+      mData: "action"
+    },{
+      mData: null,
+      sDefaultContent: "test sDefaultContent"
+    }],
+    fnCreatedRow: function(nRow, aData, iDataIndex){
+      bindDeleteEvent($(nRow).find("input.actionDelete"));
+    }
+  });
+  
+  // [add] button
+  $("#add1").on("click",function(){
+    var t = $("#table3").dataTable();
+    var dataObj = $("#form1").serializeObject();
+    t.fnAddData(dataObj);
+  });
+}
+
+function bindDeleteEvent(inputs){
+  var t = $("#table3").dataTable();
+  inputs.on("click", function(){
+    t.fnDeleteRow($(this).closest("tr")[0]);
+  });
 }
 
 // back-end table init

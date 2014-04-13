@@ -4,8 +4,64 @@
   overflow:hidden;
   text-overflow: ellipsis;
 }
+/* clear the float for datatable */
+/* Self clearing - */
+div.dataTables_wrapper:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+html[xmlns] .dataTables_wrapper { display: block; }
+* html .dataTables_wrapper { height: 1%; }
+
+.layout1AlignRight{
+  text-align:right;
+}
 </style>
 <div>
+<table id="table3">
+	<thead>
+		<tr>
+			<th>first</th>
+			<th>last</th>
+			<th>age</th>
+      <th>action</th>
+      <th>action2</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>zhao</td><td>hongsheng</td><td>30</td><td></td><td></td></tr>
+    <tr><td>liu</td><td>dehua</td><td>41</td><td></td><td></td></tr>
+    <tr><td>ao</td><td>bama</td><td>50</td><td></td><td></td></tr>
+	</tbody>
+</table>
+</div>
+<div>
+  <form id="form1" class="form-horizontal">
+    <div class="control-group">
+      <div class="control-label">first name:</div>
+      <div class="controls"><input type="text" name="first" value=""></div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">last name:</div>
+      <div class="controls"><input type="text" name="last" value=""></div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">age:</div>
+      <div class="controls"><input type="text" name="age" value=""></div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <input type="button" id="add1" value="add"/>
+      </div>
+    </div>
+    <input type="hidden" name="action" value="action"/>
+  </form>
+</div>
+<hr/>
 <table id="table2">
 	<thead>
 		<tr>
