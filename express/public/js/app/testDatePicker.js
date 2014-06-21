@@ -15,7 +15,7 @@ function testDatePickerInit(){
         multiSeparator: " ",
         altField: $("#dateOutput"),
         onSelect: function(){
-            $("#btn1").val("select ...");
+//            $("#btn1").val("select ...");
             $("#dateOutput").html($("#dateOutput").val());
         }
     });
