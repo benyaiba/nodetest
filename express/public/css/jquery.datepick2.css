@@ -287,3 +287,12 @@ a.datepick-cmd {
 .datepick-month-header select, .datepick-month-header input {
   height: 1.9em;
 }
+
+/* for the dates that not selectable */
+.datepick-month tbody td span,
+.datepick-month tbody td span.datepick-weekend{
+  background-color: gray;
+}
+.datepick-month tbody td span.datepick-other-month{
+  background-color: #fff;
+}

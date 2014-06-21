@@ -10,7 +10,8 @@ function testDatePickerInit(){
 		multiSelect:100
 	});
     $("#btn1").datepick({
-        dateFormat: "yyyy-mm-dd",
+        dateFormat: "yyyy/mm/dd",
+        minDate: new Date(),
         multiSelect: 100,
         multiSeparator: " ",
         altField: $("#dateOutput"),
