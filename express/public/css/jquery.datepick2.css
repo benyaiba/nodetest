@@ -32,7 +32,7 @@
 }
 
 .datepick a.datepick-disabled {
-  color: #000;
+  color: #ddd;
   cursor: auto;
 }
 
