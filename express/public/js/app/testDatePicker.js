@@ -9,6 +9,13 @@ function testDatePickerInit(){
 		dateFormat: "yyyy-mm-dd",
 		multiSelect:100
 	});
+	
+	$("#dateOutput").popover({
+	    trigger: "hover",
+	    content: function(){
+	        return $("#dateOutput").val();
+	    }
+	});
     $("#btn1").datepick({
         dateFormat: "yyyy/mm/dd",
         minDate: new Date(),
@@ -16,7 +23,6 @@ function testDatePickerInit(){
         multiSeparator: " ",
         altField: $("#dateOutput"),
         onSelect: function(){
-//            $("#btn1").val("select ...");
             $("#dateOutput").html($("#dateOutput").val());
         }
     });
