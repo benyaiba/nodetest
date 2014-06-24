@@ -83,11 +83,11 @@ function initDataTable2() {
 		"bServerSide": true,
 		"bFilter": true,
 		// infinity scroll begin
-//		"bScrollInfinite": true,
-//		"bScrollCollapse": true,
-//		"sScrollY": "200px",
+		"bScrollInfinite": true,
+		"bScrollCollapse": true,
+		"sScrollY": "200px",
 		// end
-    "sPaginationType": "full_numbers",
+    //"sPaginationType": "full_numbers",
 		"sAjaxSource": "../person",
 		aoColumns: [{
 			mData: "first",
