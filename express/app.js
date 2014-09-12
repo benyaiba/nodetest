@@ -17,16 +17,23 @@ app.use(express.static(__dirname, "/public"));
 app.use(express.bodyParser());
 
 app.get("/api/mysqlschema", function(req, res){
-    var jsonpFlg = req.query.callback;
-    mysqlSchema.run(function(result){
-        var ret = JSON.stringify(result);
-        ret = jsonpFlg ? wrapForJsonp(ret) : ret;
-        res.send(ret);
+    var callbackFnName = req.query.callback;
+    mysqlSchema.run(req.query, function(err, result){
+        var ret = null;
+        if(err){
+            ret = JSON.stringify({"error": err});
+        }else{
+            ret = JSON.stringify(result);
+        }
+        ret = callbackFnName ? wrapForJsonp(callbackFnName, ret) : ret;
+        res.set({
+            "content-type": callbackFnName ? "text/javascript" : "text/json"
+        })
+        res.send(ret).end();
     });
 });
-function wrapForJsonp(jsonStr){
-    var jsonpMethodName = "jsonCallback";
-    return jsonpMethodName + "(" + jsonStr + ")";
+function wrapForJsonp(callbackFnName, jsonStr){
+    return callbackFnName + "(" + jsonStr + ")";
 }
 
 app.get("/user/:name", function(req, res){
