@@ -2,40 +2,43 @@ var async = require("async");
 var mysql = require("mysql");
 
 var conn = null;
+var config = null;
 
 function createConnection(next){
     conn = mysql.createConnection({
-        host     : '192.168.196.8',
-        port: "9515",
-        user     : 'dev',
-        password : 'password',
-        database: "ssp_pub_site_db"
+        host     : config.host,
+        port     : config.port,
+        user     : config.username,
+        password : config.password,
+        database : config.database,
+        timeout: 800
       });
 
     conn.connect(function(err){
         if(err){
             console.error(err);
-            return;
+        } else{
+            console.info("connection created ");
         }
-        console.info("connection created ");
-        next();
+        next(err);
     });
 }
 
-function handleError(next){
-    conn.on("error", function(err){
-       console.error("in global error handler", e);
-    });
-    next();
-}
+//function handleError(next){
+//    conn.on("error", function(err){
+//       console.error("in global error handler", e);
+//    });
+//    next();
+//}
 
 function getSchema(next){
-    conn.query("show columns from ??", ["allowed_account_ssp_pub_site"], function(err, rows){
+    conn.query("show full columns from ??", [config.tableName], function(err, rows){
         if(err){
             console.error(err);
-            return;
+        }else{
+            console.info("query column successed !");
         }
-        next(null, rows);
+        next(err, rows);
     })
 }
 
@@ -45,6 +48,7 @@ function changeMysqlSchemaToJava(rows, next){
        var obj = {};
        obj.name = getVariableName(row["Field"]);
        obj.type = getDeclareTypes(row["Type"]);
+       obj.comment = row["Comment"];
        obj.defaultValue = getDefaultValue(obj.type);
        retArr.push(obj);
     });
@@ -56,16 +60,18 @@ function output(rows, next){
     conn.end();
 }
 
-function run(callback) {
-    var runSequenceArr = [ createConnection, handleError, getSchema, changeMysqlSchemaToJava, output];
+function run(pConfig, callback) {
+    config = pConfig;
 
+    var runSequenceArr = [ createConnection, getSchema, changeMysqlSchemaToJava, output];
     var ret = null;
     async.waterfall(runSequenceArr, function(err, result) {
         if (err) {
             console.error("err in async", err);
-            return;
+        }else{
+            console.info("async water fall succeed!");
         }
-        callback(result);
+        callback(err, result);
     });
 }
 
@@ -98,7 +104,7 @@ function getDeclareTypes(type){
         return "Float";
     }
     if(type.indexOf("timestamp") != -1){
-        return "TimeStamp";
+        return "Timestamp";
     }
     if(type.indexOf("date") != -1){
         return "Date";
@@ -122,14 +128,15 @@ function getDefaultValue(type){
     if(type == "int"){
         return "0";
     }
-    if(type == "date"){
+    if(type == "Date"){
         return "null";
     }
     if(type == "BigDecimal"){
         return "null";
     }
-    if(type == "TimeStamp"){
+    if(type == "Timestamp"){
         return "null";
     }
+    return null;
 }
 exports.run = run;
