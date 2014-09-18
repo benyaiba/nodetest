@@ -29,7 +29,7 @@ var datas = {
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
   },
-  
+
 "monitor_base":{
     "mads_id": "1",
     "monitor_name": "自動monitor",
@@ -60,7 +60,7 @@ var datas = {
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
   },
-    
+
 "creative_summary" : {
       "target_date" : "2014-02-04",
       "aired_time" : "5640",
@@ -72,7 +72,7 @@ var datas = {
       "create_time" : "2014-03-08 03:08:00",
       "update_time" : "2014-03-08 03:08:00"
     },
-      
+
 "struct_summary" : {
       "target_date" : "2014-01-04",
       "aired_time" : "45",
