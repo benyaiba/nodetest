@@ -5,35 +5,35 @@ var Deferred = require("Deferred");
 var async = require("async");
 
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
+  host     : '192.168.196.10',
+  port     : '9918',
   database : "monoliths_master_db",
-  user     : 'dev',
-  password : 'password'
+  user     : 'd_signage',
+  password : 'signage'
 });
 
 connection.connect();
 
 var base_pure_ad_product = {
-	"product_name": "product_name",
+	"product_name": "商品名_",
 	"fixed_price": "100.0",
 	"wholesale_price": "40.0",
 	"stock": "99",
-	"order_count": "10",
+	"order_limit": "10",
 	"order_term": "2",
 	"remarks": "bara bura bura .",
-	"start_date": "2014-09-01",
-	"end_date": "2014-09-10",
+	"start_date": "2014-09-24",
+	"end_date": "2014-10-24",
 	"status": "active",
 	"update_time": "2014-06-14",
 	"create_time": "2014-06-14"
 }
 
-var count = 100;
-var monitor_id = 1;
+var count = 10;
+var pure_ad_monitor_id = 2;
 
 var params = {
-  monitor_id: monitor_id
+  pure_ad_monitor_id: pure_ad_monitor_id
 }
 
 connection.beginTransaction(function(err){
@@ -91,7 +91,7 @@ function createOneProduct(productObj, conn){
 
 function updateProductName(productId, productName, conn){
 	var dfd = new Deferred();
-	var sql = "update pure_ad_product set product_name = ? where product_id = ?";
+	var sql = "update pure_ad_product set product_name = ? where pure_ad_product_id = ?";
 	conn.query(sql, [productName,productId], function(err, result){
 		if(err){
 	      conn.rollback();
