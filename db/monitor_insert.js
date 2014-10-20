@@ -16,8 +16,8 @@ connection.connect();
 
 FORCE_INSERT_SCHEDULE = true;
 var params = {
-  mads_id: 80,
-  air_times: ["2014-04-21"],
+  mads_id: 1,
+  air_times: ["2014-10-05"],
   schedule_times: [["08:00:00", "20:00:00"]],
   monitor_name: "monitor"
 }
@@ -37,7 +37,7 @@ connection.beginTransaction(function(err){
 // create monitor
 function createMonitor() {
   // create monitor
-  createOneMonitor(params.monitor_name, connection).done(function(monitor_id) {
+  createOneMonitor().done(function(monitor_id) {
     async.eachSeries(params.schedule_times,
     function(schedule_times, next) {
       var i = params.schedule_times.indexOf(schedule_times);
@@ -87,30 +87,6 @@ function relateMonitorSchedule(monitor_id,schedule_id, air_time, start_datetime,
     }else{
       console.log("++ insert monitor_schedule done ...");
       dfd.resolve();
-    }
-  });
-  return dfd.promise();
-}
-
-function createOneMonitor(monitor_name, conn){
-  var dfd = new Deferred();
-  conn.query("insert into monitor set ?", extend(monitor_base,{monitor_name: monitor_name}), function(err, result){
-    if(err){
-      conn.rollback();
-      console.log("insert monitor error .", err);
-    }else{
-      var monitor_id = result.insertId;
-      // update monitor name
-      var monitor_name = "monitor_" + monitor_id;
-      conn.query("update monitor set monitor_name = ? where monitor_id = ?",[monitor_name, monitor_id], function(err, result){
-        if(err){
-          conn.rollback();
-          console.log("update monitor error .", err);
-        }else{
-          console.log("++ insert one monitor, monitor_id:" + monitor_id);
-          dfd.resolve(monitor_id);
-        }
-      });
     }
   });
   return dfd.promise();
@@ -243,3 +219,127 @@ function check_relay_schedule_program(schedule_id, program_id, conn){
   });
   return dfd.promise();
 }
+
+// =============== monitor create ==================
+function insertMonitor(next){
+  var conn = connection;
+  var sql = "insert into monitor set ?";
+  var sqlParam = extend(monitor_base,{monitor_name: params.monitor_name});
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("insert one monitor, id : ", result.insertId);
+    }
+    next(err, result.insertId);
+  });
+}
+function updateMonitorName(monitorId, next){
+  var conn = connection;
+  var sql = "update monitor set monitor_name = ? where monitor_id = ?";
+  var sqlParam = [(params.monitor_name + monitorId), monitorId];
+  conn.query(sql, sqlParam, function(err, result){
+    if(!err){
+      console.log("update monitor name");
+    }
+    next(err,monitorId);
+  });
+}
+function insertMonitorLocation(monitorId, next){
+  var conn = connection;
+  var sql = "insert into monitor_location set ?";
+  var sqlParam = extend(baseDatas.monitor_location_base, {monitor_id: monitorId});
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("insert monitor location");
+    }
+    next(err, monitorId);
+  });
+}
+function relayMonitorAge(monitorId, next){
+  var conn = connection;
+  var sql = "insert into relay_monitor_age set ?";
+  var sqlParams = {
+    monitor_id: monitorId,
+    age_id: null,
+    order_type_id: 1,
+    rate: 80,
+    soft_delete_flag: "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  async.each([1,2,3,4], function(ageId, next2){
+     sqlParams.age_id = ageId;
+     conn.query(sql, sqlParams, function(err, result){
+       next2(err, result);
+     });
+  }, function(err){
+    if(!err){
+      console.log("relate monitor age.");
+    }
+    next(err, monitorId);
+  });
+}
+
+function relayMonitorPersona(monitorId, next){
+  var conn = connection;
+  var sql = "insert into relay_monitor_persona set ?";
+  var sqlParams = {
+    monitor_id: monitorId,
+    persona_id: null,
+    order_type_id: 1,
+    rate: 80,
+    soft_delete_flag: "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  async.each([1,2,3,4], function(personaId, next2){
+     sqlParams.persona_id = personaId;
+     conn.query(sql, sqlParams, function(err, result){
+       next2(err, result);
+     });
+  }, function(err){
+    if(!err){
+      console.log("relay monitor persona");
+    }
+    next(err, monitorId);
+  });
+}
+
+function relayMonitorGender(monitorId, next){
+  var conn = connection;
+  var sql = "insert into relay_monitor_gender set ?";
+  var sqlParams = {
+    monitor_id: monitorId,
+    gender_id: null,
+    order_type_id: 1,
+    rate: 80,
+    soft_delete_flag: "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  async.each([1,2], function(genderId, next2){
+     sqlParams.gender_id = genderId;
+     conn.query(sql, sqlParams, function(err, result){
+       next2(err, result);
+     });
+  }, function(err){
+    if(!err){
+      console.log("relay monitor gender");
+    }
+    next(err, monitorId);
+  });
+}
+
+function createOneMonitor(){
+  var dfd = new Deferred();
+  async.waterfall([insertMonitor, updateMonitorName, insertMonitorLocation, relayMonitorAge, relayMonitorPersona, relayMonitorGender], 
+    function(err, result){
+      if(err){
+        console.log("err in water fall", err);
+        connection.rollback();
+      }else{
+        dfd.resolve(result);
+      }
+  });
+  return dfd;
+}
+// ============== monitor creat end =========

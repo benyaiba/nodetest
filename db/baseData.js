@@ -42,9 +42,27 @@ var datas = {
     "city": "渋谷区",
     "street": "マークシティ",
     "default_creative_id": "422",
+    "country_id": "1",
+    "geo_id": "20",
+    "place_category_id": "10003",
     "standard_cost": "200.00000000",
     "special_cost": "300.00000000",
     "standard_time": "00:00:00",
+    "soft_delete_flag": "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  },
+    
+"monitor_location_base":{
+    "monitor_id": "",
+    "order_type_id": "1",
+    "location_example": "ロケーションの例",
+    "monitor_count": "88",
+    "content_type_id": "1",
+    "sound_flg": "on",
+    "report_type_id": "1",
+    "detail_file_name": "ファイル名",
+    "target_count": "888",
     "soft_delete_flag": "open",
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
