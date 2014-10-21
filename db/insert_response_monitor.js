@@ -8,7 +8,7 @@ var conn = null;
 
 var params = {
     mads_id: 1,
-    air_times: [ "2014-10-16", "2014-10-17"],
+    air_times: [ "2014-10-06"],
     category_id: 2
 }
 var response_monitor_base = extend(baseDatas.monitor_base, {
@@ -48,11 +48,19 @@ function insertMonitor(next) {
 }
 
 function updateMonitorName(monitorId, next) {
-    var sql = "update monitor set monitor_name = ? ";
+    var sql = "update monitor set monitor_name = ? where monitor_id = ?";
     var name = "感知式モニタ" + monitorId;
-    conn.query(sql, name, function(err) {
+    conn.query(sql, [name, monitorId], function(err) {
         next(err, monitorId);
     })
+}
+
+function insertMonitorLocation(monitorId, next){
+  var sql = "insert into monitor_location set ?";
+  var sqlParam = extend(baseDatas.monitor_location_base, {monitor_id: monitorId});
+  conn.query(sql,sqlParam, function(err, result){
+    next(err, monitorId);
+  });
 }
 
 function insertRelayResponseMonitor(monitorId, next) {
@@ -94,8 +102,9 @@ function insertResponseMonitorScheduleOne(monitorId, airtime, next) {
 }
 
 function main() {
-    async.waterfall([ createConnection, startTransaction, insertMonitor, updateMonitorName, insertRelayResponseMonitor,
-            insertResponseMonitorSchedule ], function(err, monitorId) {
+    async.waterfall([ createConnection, startTransaction, insertMonitor, updateMonitorName, insertMonitorLocation,
+            insertRelayResponseMonitor, insertResponseMonitorSchedule ], 
+       function(err, monitorId) {
         if (err) {
             console.error("error in water fall, rollback !", err);
             conn.rollback();

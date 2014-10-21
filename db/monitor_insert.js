@@ -18,6 +18,9 @@ FORCE_INSERT_SCHEDULE = true;
 var params = {
   mads_id: 1,
   air_times: ["2014-10-05"],
+  // 0 -> normal
+  // 2 -> sepcial_area , will insert area_master
+  external_media_id: 2,
   schedule_times: [["08:00:00", "20:00:00"]],
   monitor_name: "monitor"
 }
@@ -221,13 +224,55 @@ function check_relay_schedule_program(schedule_id, program_id, conn){
 }
 
 // =============== monitor create ==================
-function insertMonitor(next){
+function insertAreaMaster(next){
+  if(params.external_media_id == 0){
+    next(null, 0);
+    return;
+  }
+  var conn = connection;
+  var sql = "insert into area_master set ?";
+  var sqlParam = {
+    area_name: "area_name",
+    special_area_flag: "special",
+    multiple_flag : "on",
+    "soft_delete_flag": "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      var areaId = result.insertId;
+      console.log("insert area_master as special area, id: [ " + areaId + " ]");
+    }
+    next(err, areaId);
+  });
+}
+function updateAreaName(areaId, next){
+  if(areaId == 0){
+    next(null, 0);
+    return;
+  }
+  var conn = connection;
+  var sql = "update area_master set area_name = ? where area_id = ?";
+  var sqlParam = ["特別エリア" + areaId, areaId];
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("update area name done.");
+    }
+    next(err, areaId);
+  });
+}
+function insertMonitor(areaId, next){
   var conn = connection;
   var sql = "insert into monitor set ?";
   var sqlParam = extend(monitor_base,{monitor_name: params.monitor_name});
+  if(areaId != 0){
+    sqlParam.special_area_id = areaId;
+    sqlParam.external_media_id = params.external_media_id;
+  }
   conn.query(sql,sqlParam, function(err, result){
     if(!err){
-      console.log("insert one monitor, id : ", result.insertId);
+      console.log("insert one monitor, id : [ ", result.insertId + " ]");
     }
     next(err, result.insertId);
   });
@@ -250,6 +295,27 @@ function insertMonitorLocation(monitorId, next){
   conn.query(sql,sqlParam, function(err, result){
     if(!err){
       console.log("insert monitor location");
+    }
+    next(err, monitorId);
+  });
+}
+function insertRelayMedipMonitor(monitorId, next){
+  if(params.external_media_id != 2){
+    next(null, monitorId);
+    return;
+  }
+  var conn = connection;
+  var sql = "insert into relay_medip_monitor set ?";
+  var sqlParam = {
+    monitor_id: monitorId,
+    medip_device_id: "888",
+    roll_count: "3",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("insert relay_medip_monitor .");
     }
     next(err, monitorId);
   });
@@ -298,7 +364,7 @@ function relayMonitorPersona(monitorId, next){
      });
   }, function(err){
     if(!err){
-      console.log("relay monitor persona");
+      console.log("relate monitor persona");
     }
     next(err, monitorId);
   });
@@ -323,7 +389,7 @@ function relayMonitorGender(monitorId, next){
      });
   }, function(err){
     if(!err){
-      console.log("relay monitor gender");
+      console.log("relate monitor gender");
     }
     next(err, monitorId);
   });
@@ -331,7 +397,10 @@ function relayMonitorGender(monitorId, next){
 
 function createOneMonitor(){
   var dfd = new Deferred();
-  async.waterfall([insertMonitor, updateMonitorName, insertMonitorLocation, relayMonitorAge, relayMonitorPersona, relayMonitorGender], 
+  async.waterfall([insertAreaMaster, updateAreaName, 
+    insertMonitor, updateMonitorName, insertMonitorLocation, 
+    insertRelayMedipMonitor,
+    relayMonitorAge, relayMonitorPersona, relayMonitorGender], 
     function(err, result){
       if(err){
         console.log("err in water fall", err);
