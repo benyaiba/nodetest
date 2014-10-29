@@ -8,8 +8,9 @@ var conn = null;
 
 var params = {
     mads_id: 1,
-    air_times: [ "2014-10-06"],
-    category_id: 2
+    air_times: [ "2014-12-13"],
+    category_id: 2,
+    createSpArea: true
 }
 var response_monitor_base = extend(baseDatas.monitor_base, {
     "mads_id": params.mads_id,
@@ -98,24 +99,69 @@ function insertResponseMonitorScheduleOne(monitorId, airtime, next) {
     conn.query(sql, obj, function(err) {
         next(err, monitorId);
     })
-
 }
 
+function insertAreaMaster(monitorId, next){
+  var sql = "insert into area_master set ?";
+  var sqlParam = {
+    area_name: "area_name",
+    special_area_flag: "special",
+    multiple_flag : "on",
+    "soft_delete_flag": "open",
+    "update_time": "2014-03-08 03:08:00",
+    "create_time": "2014-03-08 03:08:00"
+  }
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      var areaId = result.insertId;
+      console.log("insert area_master as special area, id: [ " + areaId + " ]");
+    }
+    next(err, areaId, monitorId);
+  });
+}
+function updateAreaName(areaId, monitorId, next){
+  var sql = "update area_master set area_name = ? where area_id = ?";
+  var sqlParam = ["特別エリア" + areaId, areaId];
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("update area name done.");
+    }
+    next(err, areaId, monitorId);
+  });
+}
+function updateMonitorAreaId(areaId, monitorId, next){
+  var sql = "update monitor set special_area_id = ? where monitor_id = ?";
+  var sqlParam = [areaId, monitorId];
+  conn.query(sql,sqlParam, function(err, result){
+    if(!err){
+      console.log("update monitor area_id done ...");
+    }
+    next(err, monitorId);
+  });
+}
+
+
 function main() {
-    async.waterfall([ createConnection, startTransaction, insertMonitor, updateMonitorName, insertMonitorLocation,
-            insertRelayResponseMonitor, insertResponseMonitorSchedule ], 
-       function(err, monitorId) {
-        if (err) {
-            console.error("error in water fall, rollback !", err);
-            conn.rollback();
-            conn.end();
-        } else {
-            conn.commit();
-            conn.end();
-            console.info("all done ...");
-            console.info("monitor_id: ", monitorId);
-        }
-    });
+  var monitorInsertArr = [ createConnection, startTransaction, insertMonitor, updateMonitorName, insertMonitorLocation,
+            insertRelayResponseMonitor, insertResponseMonitorSchedule ];
+  if(params.createSpArea == true){
+    monitorInsertArr.push(insertAreaMaster);
+    monitorInsertArr.push(updateAreaName);
+    monitorInsertArr.push(updateMonitorAreaId);
+  }
+  async.waterfall(monitorInsertArr,
+     function(err, monitorId) {
+      if (err) {
+          console.error("error in water fall, rollback !", err);
+          conn.rollback();
+          conn.end();
+      } else {
+          conn.commit();
+          conn.end();
+          console.info("all done ...");
+          console.info("monitor_id: ", monitorId);
+      }
+  });
 }
 
 main();
