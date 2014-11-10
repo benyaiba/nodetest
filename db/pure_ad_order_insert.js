@@ -6,7 +6,7 @@ var async = require("async");
 
 var connection = mysql.createConnection({
   host     : '192.168.196.10',
-  port     : '9918',
+  port     : '9919',
   database : "monoliths_master_db",
   user     : 'd_signage',
   password : 'signage'

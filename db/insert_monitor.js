@@ -17,7 +17,7 @@ connection.connect();
 FORCE_INSERT_SCHEDULE = true;
 var params = {
   mads_id: 1,
-  air_times: ["2014-10-05"],
+  air_times: ["2014-11-11"],
   // 0 -> normal
   // 2 -> sepcial_area , will insert area_master
   external_media_id: 2,

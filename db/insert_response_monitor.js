@@ -8,7 +8,7 @@ var conn = null;
 
 var params = {
     mads_id: 1,
-    air_times: [ "2014-12-13"],
+    air_times: [ "2014-11-11"],
     category_id: 2,
     createSpArea: true
 }
