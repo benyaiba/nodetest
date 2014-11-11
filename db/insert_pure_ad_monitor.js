@@ -251,6 +251,30 @@ function relayMonitorGender(monitorId, next){
   });
 }
 
+function insertRelayMonitorFormat(monitorId, next){
+  async.eachSeries([1,2,3], function(formatId, eachNext) {
+      insertRelayMonitorFormatOne(monitorId, formatId, eachNext)
+  }, function(err) {
+      next(err, monitorId);
+  });
+}
+
+function insertRelayMonitorFormatOne(monitorId, formatId, next){
+  var conn = connection;
+  var sql = "insert into relay_pure_ad_monitor_format set ?";
+  var sqlParam = {
+        "pure_ad_monitor_id": monitorId,
+        "format_id": formatId,
+        "create_time": "2014-03-08 03:08:00"
+  }
+  conn.query(sql, sqlParam, function(err, result){
+    if(err){
+      console.log("insert into realy_pure_ad_monitor_format err !!", err);
+    }
+    next(err);
+  });
+}
+
 function main(){
   async.waterfall([insertAreaMaster,
                     updateAreaName,
@@ -261,7 +285,8 @@ function main(){
                     insertMonitorLocation,
                     relayMonitorAge,
                     relayMonitorPersona,
-                    relayMonitorGender
+                    relayMonitorGender,
+                    insertRelayMonitorFormat
 ], function(err){
   if(err){
     console.log(err);
