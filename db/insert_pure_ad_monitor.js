@@ -15,19 +15,19 @@ var connection = mysql.createConnection({
 var params = {
   monitor_name: "純広モニタ",
   oneDayDates: [
-      "2015-01-11",
-      "2015-01-11",
-      "2015-01-12",
-      "2015-01-13",
-      "2015-01-16",
+      "2014-12-29",
+      "2014-12-30",
+      "2015-01-01",
+      "2015-01-03"
+//      "2015-01-16",
       ],
   periodDates: [
-                ["2015-01-11", "2015-01-15"], 
-                ["2015-01-12", "2015-01-16"], 
-                ["2015-02-01", "2015-02-03"], 
-                ["2015-02-04", "2015-02-05"], 
-                ["2015-03-01", "2015-03-03"], 
-                ["2015-03-05", "2015-03-07"]
+                ["2014-12-29", "2014-12-31"], 
+                ["2015-01-01", "2015-01-02"],
+                ["2015-01-05", "2015-01-08"] 
+//                ["2015-02-04", "2015-02-05"], 
+//                ["2015-03-01", "2015-03-03"], 
+//                ["2015-03-05", "2015-03-07"]
                ]
 }
 
@@ -82,7 +82,10 @@ function updateAreaName(areaId, next){
 function insertMonitor(areaId, next){
   var conn = connection;
   var sql = "insert into pure_ad_monitor set ?";
-  var sqlParam = extend(baseDatas.monitor_base,{monitor_name: params.monitor_name});
+  var sqlParam = extend(baseDatas.monitor_base,{
+      monitor_name: params.monitor_name,
+      special_area_id: areaId
+  });
   conn.query(sql,sqlParam, function(err, result){
     if(err){
       console.log("insert one pure_ad_monitor error !", err);

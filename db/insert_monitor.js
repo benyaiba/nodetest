@@ -17,11 +17,11 @@ connection.connect();
 FORCE_INSERT_SCHEDULE = true;
 var params = {
   mads_id: 1,
-  air_times: ["2014-11-11"],
+  air_times: ["2014-12-29", "2014-12-30", "2014-12-31", "2015-01-01", "2015-01-04"],
   // 0 -> normal
   // 2 -> sepcial_area , will insert area_master
   external_media_id: 2,
-  schedule_times: [["08:00:00", "20:00:00"]],
+  schedule_times: [["08:00:00", "20:00:00"],["08:00:00", "20:00:00"],["08:00:00", "20:00:00"],["08:00:00", "20:00:00"],["08:00:00", "20:00:00"]],
   monitor_name: "monitor"
 }
 var program_base = extend(baseDatas.program_base, {mads_id: params.mads_id});
