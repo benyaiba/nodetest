@@ -33,6 +33,7 @@ var convertOne = function(key, inputFilePath, outputFilePath, overwriteFlg){
 				fs.unlinkSync(inputFilePath);
 				fs.rename(outputFilePath, inputFilePath);
 			}
+			console.log("success one -- ", inputFilePath);
 		} else {
 			/* Something went wrong! You can parse the JSON body for details. */
 			console.log("Compression failed : " + inputFilePath);
