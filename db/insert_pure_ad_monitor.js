@@ -4,6 +4,7 @@ var baseDatas = require('./baseData').datas;
 var Deferred = require("Deferred");
 var async = require("async");
 
+
 var connection = mysql.createConnection({
   host     : '192.168.196.10',
   port     : '9918',
@@ -12,21 +13,32 @@ var connection = mysql.createConnection({
   password : 'signage'
 });
 
+/*  
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  port     : '3306',
+  database : "monoliths_master_db",
+  user     : 'dev',
+  password : 'password'
+});
+*/
+
 var params = {
+  monitorId: "",
   monitor_name: "純広モニタ",
   oneDayDates: [
       "2014-12-29",
       "2014-12-30",
       "2015-01-01",
-      "2015-01-03"
-//      "2015-01-16",
+      "2015-01-03",
+      "2015-01-16",
       ],
   periodDates: [
                 ["2014-12-29", "2014-12-31"], 
                 ["2015-01-01", "2015-01-02"],
-                ["2015-01-05", "2015-01-08"] 
-//                ["2015-02-04", "2015-02-05"], 
-//                ["2015-03-01", "2015-03-03"], 
+                ["2015-01-05", "2015-01-08"],
+                ["2015-02-04", "2015-02-05"], 
+                ["2015-03-01", "2015-03-03"] 
 //                ["2015-03-05", "2015-03-07"]
                ]
 }
@@ -86,6 +98,9 @@ function insertMonitor(areaId, next){
       monitor_name: params.monitor_name,
       special_area_id: areaId
   });
+  if(params.monitorId != ""){
+  	  sqlParam["pure_ad_monitor_id"] = params.monitorId;
+  }
   conn.query(sql,sqlParam, function(err, result){
     if(err){
       console.log("insert one pure_ad_monitor error !", err);
@@ -191,7 +206,7 @@ function relayMonitorAge(monitorId, next){
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
   }
-  async.each([1,2,3,4], function(ageId, next2){
+  async.each([1,2,3,4,5,6,7,8,9], function(ageId, next2){
      sqlParams.age_id = ageId;
      conn.query(sql, sqlParams, function(err, result){
        next2(err, result);
@@ -216,7 +231,7 @@ function relayMonitorPersona(monitorId, next){
     "update_time": "2014-03-08 03:08:00",
     "create_time": "2014-03-08 03:08:00"
   }
-  async.each([1,2,3,4], function(personaId, next2){
+  async.each([1,2,3,4,5,6,7,8], function(personaId, next2){
      sqlParams.persona_id = personaId;
      conn.query(sql, sqlParams, function(err, result){
        next2(err, result);
@@ -278,7 +293,7 @@ function insertRelayMonitorFormatOne(monitorId, formatId, next){
   });
 }
 
-function main(){
+function main(next){
   async.waterfall([insertAreaMaster,
                     updateAreaName,
                     insertMonitor,
@@ -297,10 +312,34 @@ function main(){
     connection.end();
   }else{
     connection.commit();
-    connection.end();
+    //connection.end();
     console.log("done ...");
+    next();
   }
 });
 }
 
-main();
+function doMain(){
+	var startMonitorId = 310;
+	var arr = [];
+	for(var i=0;i< 3;i++){
+		arr.push(i);
+	}
+	async.eachSeries(arr, function(id, next){
+		console.log("---- no . " + id + " ----")
+		params.monitorId = startMonitorId + id + "";
+		main(next);
+	}, function(err){
+	  // all done
+	  if(err){
+	    console.log(err);
+	    connection.rollback();
+	    connection.end();
+	  }else{
+	    connection.commit();
+	    connection.end();
+	    console.log("all done ...");
+	  }
+	});
+}
+doMain();
