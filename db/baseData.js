@@ -31,7 +31,7 @@ var datas = {
   },
 
 "monitor_base":{
-    "mads_id": "1",
+    "mads_id": "2",
     "monitor_name": "自動monitor",
     "monitor_size_id": "8",
     "monitor_size": "1980*1024",
@@ -44,7 +44,8 @@ var datas = {
     "default_creative_id": "422",
     "country_id": "1",
     "geo_id": "20",
-    "place_category_id": "10003",
+    "video_file_type_id": "2",
+    "place_category_id": "10004",
     "standard_cost": "200.00000000",
     "special_cost": "300.00000000",
     "standard_time": "00:00:00",

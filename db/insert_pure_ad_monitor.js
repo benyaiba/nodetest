@@ -27,19 +27,21 @@ var params = {
   monitorId: "",
   monitor_name: "純広モニタ",
   oneDayDates: [
-      "2014-12-29",
-      "2014-12-30",
-      "2015-01-01",
-      "2015-01-03",
-      "2015-01-16",
+//      "2014-12-29",
+//      "2014-12-30",
+//      "2015-01-01",
+//      "2015-01-03",
+//      "2015-01-16",
+      "2015-01-17",
+      "2015-01-18"
       ],
   periodDates: [
-                ["2014-12-29", "2014-12-31"], 
+                //["2014-12-29", "2014-12-31"], 
                 ["2015-01-01", "2015-01-02"],
-                ["2015-01-05", "2015-01-08"],
-                ["2015-02-04", "2015-02-05"], 
-                ["2015-03-01", "2015-03-03"] 
-//                ["2015-03-05", "2015-03-07"]
+                ["2015-01-05", "2015-01-08"]
+                //["2015-02-04", "2015-02-05"], 
+                //["2015-03-01", "2015-03-03"] ,
+                //["2015-12-18", "2015-12-19"]
                ]
 }
 
@@ -96,8 +98,10 @@ function insertMonitor(areaId, next){
   var sql = "insert into pure_ad_monitor set ?";
   var sqlParam = extend(baseDatas.monitor_base,{
       monitor_name: params.monitor_name,
-      special_area_id: areaId
+      special_area_id: areaId,
+      schedule_count: 100
   });
+  delete sqlParam.video_file_type_id;
   if(params.monitorId != ""){
   	  sqlParam["pure_ad_monitor_id"] = params.monitorId;
   }
@@ -185,7 +189,11 @@ function updatePureAdProductName(productId){
 function insertMonitorLocation(monitorId, next){
   var conn = connection;
   var sql = "insert into monitor_location set ?";
-  var sqlParam = extend(baseDatas.monitor_location_base, {monitor_id: monitorId});
+  var sqlParam = extend(baseDatas.monitor_location_base, {
+    monitor_id: monitorId,
+    order_type_id: "2"
+    
+  });
   conn.query(sql,sqlParam, function(err, result){
     if(!err){
       console.log("insert monitor location");
@@ -320,13 +328,13 @@ function main(next){
 }
 
 function doMain(){
-	var startMonitorId = 310;
+	var startMonitorId = 5014;
 	var arr = [];
-	for(var i=0;i< 3;i++){
+	for(var i=0;i< 2;i++){
 		arr.push(i);
 	}
 	async.eachSeries(arr, function(id, next){
-		console.log("---- no . " + id + " ----")
+		console.log("---- no . " + (id + 1) + " ----");
 		params.monitorId = startMonitorId + id + "";
 		main(next);
 	}, function(err){
