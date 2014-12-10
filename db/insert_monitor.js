@@ -22,7 +22,8 @@ var params = {
   // 2 -> sepcial_area , will insert area_master
   external_media_id: 2,
   schedule_times: [["08:00:00", "20:00:00"],["08:00:00", "20:00:00"]],
-  monitor_name: "monitor"
+  monitor_name: "monitor",
+  monitor_id: ""
 }
 var program_base = extend(baseDatas.program_base, {mads_id: params.mads_id});
 var monitor_base = extend(baseDatas.monitor_base, {mads_id: params.mads_id});
@@ -32,13 +33,35 @@ connection.beginTransaction(function(err){
   if(err){
     throw err
   }else{
-    createMonitor();
+    var monitroBeginId = 12014;
+    var idArr = [];
+    for(var i = 0; i< 2; i++){
+      idArr.push(i);
+    }
+    async.eachSeries(idArr, function(id, next){
+      var monitorId = id + monitroBeginId;
+      params.monitor_id = monitorId;
+      console.log("-----------  " + id + "  ---------------");
+      createMonitor(next);
+    }, function(){
+      // all done
+      if(err){
+        console.log(err);
+        connection.rollback();
+        connection.end();
+      }else{
+        connection.commit();
+        connection.end();
+        console.log("all done ...");
+      }
+    });
+    
   }
 });
 
 
 // create monitor
-function createMonitor() {
+function createMonitor(outterNext) {
   // create monitor
   createOneMonitor().done(function(monitor_id) {
     async.eachSeries(params.schedule_times,
@@ -65,8 +88,9 @@ function createMonitor() {
       // when all is done
       connection.commit(function(err) {
         if (!err) {
-          connection.end();
-          console.log("++ all done ...");
+          //connection.end();
+          console.log("++ all done [for one] ...");
+          outterNext(err);
         }
       });
     });
@@ -265,7 +289,10 @@ function updateAreaName(areaId, next){
 function insertMonitor(areaId, next){
   var conn = connection;
   var sql = "insert into monitor set ?";
-  var sqlParam = extend(monitor_base,{monitor_name: params.monitor_name});
+  var sqlParam = extend(monitor_base,{
+    monitor_name: params.monitor_name,
+    monitor_id: params.monitor_id
+  });
   if(areaId != 0){
     sqlParam.special_area_id = areaId;
     sqlParam.external_media_id = params.external_media_id;
