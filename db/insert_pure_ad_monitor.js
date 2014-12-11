@@ -208,7 +208,7 @@ function relayMonitorAge(monitorId, next){
   var sqlParams = {
     monitor_id: monitorId,
     age_id: null,
-    order_type_id: 1,
+    order_type_id: 2,
     rate: 80,
     soft_delete_flag: "open",
     "update_time": "2014-03-08 03:08:00",
@@ -233,7 +233,7 @@ function relayMonitorPersona(monitorId, next){
   var sqlParams = {
     monitor_id: monitorId,
     persona_id: null,
-    order_type_id: 1,
+    order_type_id: 2,
     rate: 80,
     soft_delete_flag: "open",
     "update_time": "2014-03-08 03:08:00",
@@ -258,7 +258,7 @@ function relayMonitorGender(monitorId, next){
   var sqlParams = {
     monitor_id: monitorId,
     gender_id: null,
-    order_type_id: 1,
+    order_type_id: 2,
     rate: 80,
     soft_delete_flag: "open",
     "update_time": "2014-03-08 03:08:00",
@@ -328,9 +328,9 @@ function main(next){
 }
 
 function doMain(){
-	var startMonitorId = 12010;
+	var startMonitorId = 12016;
 	var arr = [];
-	for(var i=0;i< 3;i++){
+	for(var i=0;i< 1;i++){
 		arr.push(i);
 	}
 	async.eachSeries(arr, function(id, next){
