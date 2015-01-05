@@ -1,70 +1,141 @@
 var net = require("net");
 var sockets = [];
 
-var server = net.createServer(function(socket) {
-    var userChecker = new UserChecker();
-    var currentStatus = userChecker.status.requireName;
-    socket.userInfo = new UserInfo();
+var STATUS = {
+        input_name : 1,
+        name_ok : 2,
+        command_help : 3,
+        command_who : 4,
+        command_change_name : 5,
+        command_private : 6
+    };
 
-    userChecker.requireName(socket, message);
-    currentStatus = userChecker.status.inputName;
+var server = net.createServer(function(socket) {
+
+    socket.write("# please input your name\r\n");
+    var status = STATUS.input_name;
+
+    var message = ""
+    socket.on("data", function(data) {
+        var input = data.toString();
+        if (!/\r\n/.test(input)) {
+            message += input;
+        } else {
+            // get one line input
+            
+            message = message.trim();
+            if (status < STATUS.name_ok) {
+                // need set user name, first
+                getName(message);
+            } else {
+                // run command or broadcast chat
+                execCommand(message)
+            }
+            message = "";
+        }
+        
+        function getName(message){
+            switch (status) {
+            case STATUS.input_name:
+                if (message == "") {
+                    // can't not be empty name, nothing to do
+                } else {
+                    socket.userInfo = new UserInfo();
+                    socket.userInfo.name = message;
+                    addOneSocket(socket);
+                    status = STATUS.name_ok;
+                    socket.write("## welcom and have a nice day ##\r\n");
+                    socket.write("# type \\help to show help list\r\n");
+                }
+                break;
+             default:
+                 console.log("err !")
+            }
+        }
+        
+        function execCommand(message){
+            status = STATUS.name_ok;
+            if (/^\\who$/.test(message)) {
+                status = STATUS.command_who;
+            }
+            if (/^\\help$/.test(message)) {
+                status = STATUS.command_help;
+            }
+            if (/^\\change_name\s.*$/.test(message)) {
+                status = STATUS.command_change_name;
+            }
+            if (/^@\w+\s.*$/.test(message)) {
+                status = STATUS.command_private;
+            }
+
+            switch (status) {
+            case STATUS.command_help:
+                socket.write("# \\who to check one line users\r\n");
+                socket.write("# \\change_name mike, to change your name to mike\r\n");
+                socket.write("# @mike xxx , to chat mike only\r\n");
+                socket.write("# \\help to show this list\r\n");
+                break;
+            case STATUS.command_who:
+                var names = getUserNameList();
+                for (var i = 0; i < names.length; i++) {
+                    socket.write("# " + names[i] + "\r\n");
+                }
+                break;
+            case STATUS.command_change_name:
+                var newName = message.replace("\\change_name ", "");
+                var oldName = socket.userInfo.name;
+                socket.userInfo.name = newName;
+                socket.write("# change your name to [" + newName + "]\r\n");
+                broadcast("# [" + oldName + "] change name to [" + newName + "]");
+                break;
+            case STATUS.command_private:
+                var fromName = socket.userInfo.name;
+                var privateMsg = message.split(" ")[1];
+                var toName = message.split(" ")[0].replace("@", "");
+                var toSocket = findSocketByName(toName);
+                if(!toSocket){
+                    socket.write("# sorry , user not found .\r\n");
+                }else{
+                    toSocket.write("* [" + fromName + "] say to you: " + privateMsg + "\r\n");
+                }
+                break;
+            default:
+                broadcast(message, socket);
+            }
+        }
+    });
 
     socket.on("end", function() {
         removeOneSocket(socket);
     });
 
-    var message = ""
-    socket.on("data", function(data) {
-        var str = data.toString();
-        if (!/\r\n/.exec(str)) {
-            message += str;
-        } else {
-
-            // already input user name
-            if(currentStatus == userChecker.status.ok){
-                broadcast(message, socket);
-                message = "";
-                return;
-            }
-
-            // require name and name confirm
-            if (currentStatus == userChecker.status.inputName) {
-                var result = userChecker.inputName(socket, message);
-                if(result == true){
-                    userChecker.requireConfirm(socket, message);
-                    currentStatus = userChecker.status.inputConfirm;
-                }else{
-                    userChecker.requireName(socket, message);
-                }
-                message = "";
-                return;
-            }
-            if (currentStatus == userChecker.status.inputConfirm) {
-                var result = userChecker.inputConfirm(socket, message);
-                if(result == true){
-                    currentStatus = userChecker.status.ok;
-                    userChecker.ok(socket);
-                    addOneSocket(socket);
-                }else{
-                    userChecker.requireName(socket, message);
-                    currentStatus = userChecker.status.inputName;
-                }
-                message = "";
-                return;
+    function findSocketByName(name) {
+        for (var i = 0; i < sockets.length; i++) {
+            var s = sockets[i];
+            if (s.userInfo.name == name) {
+                return s;
             }
         }
-    })
+    }
+
+    function getUserNameList() {
+        var names = [];
+        for (var i = 0; i < sockets.length; i++) {
+            names.push(sockets[i].userInfo.name);
+        }
+        return names;
+    }
 
     function broadcast(message, socket) {
         for (var i = 0; i < sockets.length; i++) {
             var s = sockets[i];
-            if(s == socket){
+            if (s == socket) {
                 // not send to self
                 continue;
-            }else{
-                if(socket){
+            } else {
+                if (socket) {
                     s.write("[" + socket.userInfo.name + "] " + message + "\r\n");
-                }else{
+                } else {
                     s.write(message + "\r\n");
                 }
             }
@@ -72,7 +143,7 @@ var server = net.createServer(function(socket) {
     }
 
     function addOneSocket(socket) {
-        broadcast("[" + socket.userInfo.name + "]" + " * join the chat *");
+        broadcast("++ [" + socket.userInfo.name + "]" + " join the chat *");
         sockets.push(socket);
     }
 
@@ -89,123 +160,8 @@ var server = net.createServer(function(socket) {
     }
 });
 
-function UserChecker(){
-    this.status = {
-            requireName: "requireName",
-            inputName: "inputName",
-            requireConfirm: "requireConfirm",
-            inputConfirm: "inputConfirm",
-            ok: "ok"
-    }
-
-    this.requireName = function(socket, message){
-        socket.write("please input your name\r\n");
-    }
-    this.inputName = function(socket, message){
-        var msg = message.trim();
-        if(!msg || msg == ""){
-            return false;
-        }else{
-            socket.userInfo.name = message;
-            return true;
-        }
-    }
-    this.requireConfirm = function(socket, message){
-        socket.write("your name is [%s] , is that ok ? (y/n)\r\n".replace("%s", socket.userInfo.name));
-    }
-    this.inputConfirm = function(socket, message){
-        var msg = message.trim();
-        if(!/^(y|n)$/.test(message) || message == "n"){
-            return false;
-        }else {
-            socket.userInfo.confirmFlg = true;
-            return true;
-        }
-    }
-    this.ok = function(socket, message){
-       socket.write("-- welcome , have a nice day ~ -- \r\n");
-    }
-}
-
-//function UserChecker(socket, message) {
-//    this.socket = socket;
-//    this.message = message;
-//
-//    var currentStatus = "NONAME";
-//    this.statusMap = {
-//        "NONAME": {
-//            message: "please input your name\r\n",
-//            expectValue: /./,
-//            judgeStatus: function() {
-//                if (!this.socket.name || !this.socket.userInfo.name) {
-//                    return true;
-//                }
-//            },
-//            goNext: (function() {
-//                this.socket.userInfo.name = message;
-//                currentStatus = "NOCONFIRM";
-//            }).bind(this)
-//        },
-//
-//        "NOCONFIRM": {
-//            message: (function(socket) {
-//                return "your name is [%field1], is that ok? (y/n)\r\n".replace("%field1", this.socket.userInfo.name);
-//            }).bind(this),
-//            expectValue: /^(y|n)$/,
-//            judgeStatus: function() {
-//                if (this.socket.name || this.socket.userInfo.confirmFlg == false) {
-//                    return true;
-//                }
-//            },
-//            goNext: function() {
-//                if (message == "y") {
-//                    this.socket.userInfo.confirmFlg = true;
-//                    currentStatus = "OK";
-//                } else {
-//                    this.socket.userInfo.name = "";
-//                    currentStatus = "NONAME";
-//                }
-//            }
-//        },
-//        "OK": {}
-//    }
-//
-//    this.isValid = function() {
-//
-//        if (currentStatus == "OK") {
-//            return true;
-//        } else {
-//
-//            var statusObj = this.statusMap[currentStatus];
-//            var msg = this.message.trim();
-//            if (msg == "" || !statusObj.expectValue.test(msg)) {
-//                socket.write(getMessage(statusObj["message"]));
-//            } else {
-//                statusObj["goNext"]();
-//            }
-//        }
-//    }
-//
-//    function getMessage(fnOrString) {
-//        if (typeof (fnOrString) == "function") {
-//            return fnOrString(this.socket);
-//        } else {
-//            return fnOrString;
-//        }
-//    }
-//}
-
 function UserInfo() {
     var userName = null;
-    var confirmFlg = false;
-
-    this.setConfirmFlg = function(flg) {
-        confirmFlg = flg;
-    }
-
-    this.getConfirmFlg = function() {
-        return confirmFlg;
-    }
 
     this.setUserName = function(ua) {
         userName = ua;
@@ -215,4 +171,4 @@ function UserInfo() {
     }
 }
 
-server.listen(1234, "192.168.196.142");
+server.listen(1234, "127.0.0.1");
