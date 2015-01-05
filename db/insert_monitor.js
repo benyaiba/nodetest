@@ -33,14 +33,18 @@ connection.beginTransaction(function(err){
   if(err){
     throw err
   }else{
-    var monitroBeginId = 12014;
+    var monitroBeginId = 12021;
     var idArr = [];
     for(var i = 0; i< 2; i++){
       idArr.push(i);
     }
     async.eachSeries(idArr, function(id, next){
-      var monitorId = id + monitroBeginId;
-      params.monitor_id = monitorId;
+      if(monitroBeginId == ""){
+        params.monitor_id = "";
+      }else{
+        var monitorId = id + monitroBeginId;
+        params.monitor_id = monitorId;
+      }
       console.log("-----------  " + id + "  ---------------");
       createMonitor(next);
     }, function(){
@@ -290,9 +294,11 @@ function insertMonitor(areaId, next){
   var conn = connection;
   var sql = "insert into monitor set ?";
   var sqlParam = extend(monitor_base,{
-    monitor_name: params.monitor_name,
-    monitor_id: params.monitor_id
+    monitor_name: params.monitor_name
   });
+  if(params.monitor_id != ""){
+    sqlParam.monitor_id = params.monitor_id;
+  }
   if(areaId != 0){
     sqlParam.special_area_id = areaId;
     sqlParam.external_media_id = params.external_media_id;
@@ -307,7 +313,8 @@ function insertMonitor(areaId, next){
 function updateMonitorName(monitorId, next){
   var conn = connection;
   var sql = "update monitor set monitor_name = ? where monitor_id = ?";
-  var sqlParam = [(params.monitor_name + monitorId), monitorId];
+  var monitorName = params.external_media_id == 2 ? "特別エリアモニタ" : "普通モニタ"
+  var sqlParam = [(monitorName + monitorId), monitorId];
   conn.query(sql, sqlParam, function(err, result){
     if(!err){
       console.log("update monitor name");

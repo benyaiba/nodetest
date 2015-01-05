@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style>
+div{
+border:1px solid black;
+}
+.f{
+float:left;
+}
+.i{
+width: 150px;
+height: 150px;
+background-color: lightblue;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+ 
+.clearfix {
+    display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+    display: block;
+}
+ 
+* html .clearfix {
+    height: 1%;
+}
+</style>
+</head>
+<body>
+<!-- clear float way 1: overflow:hidden -->
+<div style="width:200px;overflow:hidden">
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+</div>
+<hr/>
+<!-- clear float way 2: div clear:both -->
+<div style="width:200px;">
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div style="clear:both"></div>
+</div>
+<hr/>
+<!-- clear float way 3: use clear fix(which use :after element) -->
+<div style="width:200px" class="clearfix">
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+  <div class="f i"></div>
+</div>
+</body>
+</html>

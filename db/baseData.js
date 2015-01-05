@@ -45,7 +45,7 @@ var datas = {
     "country_id": "1",
     "geo_id": "20",
     "video_file_type_id": "2",
-    "place_category_id": "40001",
+    "place_category_id": "20",
     "standard_cost": "200.00000000",
     "special_cost": "300.00000000",
     "standard_time": "00:00:00",

@@ -32,13 +32,16 @@ var params = {
 //      "2015-01-01",
 //      "2015-01-03",
 //      "2015-01-16",
-      "2015-01-19",
-      "2015-01-20"
+      "2015-01-20",
+      "2015-01-22",
+      "2015-01-25",
+      "2015-01-26",
+      "2015-01-29"
       ],
   periodDates: [
 //                ["2014-12-29", "2014-12-31"], 
-                ["2015-01-19", "2015-01-20"],
-                ["2015-01-22", "2015-01-23"]
+//                ["2015-01-17", "2015-01-20"],
+//                ["2015-01-18", "2015-01-19"]
                 //["2015-02-04", "2015-02-05"], 
                 //["2015-03-01", "2015-03-03"],
                 //["2015-12-18", "2015-12-19"]
@@ -328,14 +331,19 @@ function main(next){
 }
 
 function doMain(){
-	var startMonitorId = 12016;
+	var startMonitorId = 12027;
 	var arr = [];
 	for(var i=0;i< 1;i++){
 		arr.push(i);
 	}
 	async.eachSeries(arr, function(id, next){
 		console.log("---- no . " + (id + 1) + " ----");
-		params.monitorId = startMonitorId + id + "";
+    if(startMonitorId == ""){
+      params.monitorId = "";
+    }else{
+      params.monitorId = startMonitorId + id + "";
+    }
+		
 		main(next);
 	}, function(err){
 	  // all done
