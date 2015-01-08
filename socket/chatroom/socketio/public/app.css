@@ -1,0 +1,9 @@
+#messages {
+	border: 1px solid black;
+}
+
+.message {
+	background-color: lightblue;
+	border-radius: 3px;
+	border: 1px solid blue;
+}
