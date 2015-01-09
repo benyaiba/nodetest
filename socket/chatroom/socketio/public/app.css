@@ -1,9 +1,40 @@
 #messages {
-	border: 1px solid black;
+  border: 1px solid black;
 }
 
 .message {
-	background-color: lightblue;
-	border-radius: 3px;
-	border: 1px solid blue;
+  background-color: lightblue;
+  border-radius: 3px;
+  border: 1px solid blue;
+}
+
+.error {
+  color: red;
+  position: absolute;
+  width: 300px;
+  height: 50px;
+  left: 50%;
+  top: 0px;
+  margin-left: -150px;
+  z-index: 3000;
+}
+
+#setNameMask {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -200px;
+  margin-top: -50px;
+  width: 400px;
+  height: 100px;
+  z-index: 2000;
+}
+
+#chatDiv {
+  position: absolute;
+  width: 800px;
+  height: 50px;
+  left: 50%;
+  bottom: 20px;
+  margin-left: -400px;
 }

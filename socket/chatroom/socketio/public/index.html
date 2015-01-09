@@ -6,11 +6,25 @@
 <link rel="stylesheet" href="app.css">
 <script src="lib/jquery-1.11.0.min.js"></script>
 <script src="lib/socket.io.js"></script>
+<script src="lib/jquery.cookie.js"></script>
 <script src="common/Constant.js"></script>
 <script src="index.js"></script>
 </head>
 
 <body>
-<div id="messages"></div>
+
+  <div id="messages"></div>
+  <div id="chatDiv">
+    <input type="text" name="chatContent" id="chatContent" value=""/>
+    <input type="button" name="sendMsgBtn" id="sendMsgBtn" value="发送"/>
+  </div>
+  <div class="error"></div>
+  <div id="setNameMask">
+    <div>
+      <input id="name" type="text" name="name" value="" />
+    </div>
+    <div><input id="setNameBtn" type="button" name="setNameBtn" value="OK" /></div>
+  </div>
+
 </body>
 </html>
