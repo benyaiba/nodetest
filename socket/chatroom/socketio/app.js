@@ -48,6 +48,7 @@ io.on("connection", function(socket) {
                     msg : "成功登陆聊天室，您的名字是【" + name + "】。"
                 });
                 socket.name = name;
+                updateUserList(socket);
                 socket.broadcast.emit("chat", {
                     code : Constant.CODE.MSG,
                     msg : "欢迎【" + name + "】进入聊天室。"
@@ -87,6 +88,29 @@ io.on("connection", function(socket) {
         }
     });
 });
+
+function updateUserList(socket) {
+    var userNames = getAllUserList(socket);
+    // update all others
+    socket.broadcast.emit("userList", {
+        code : Constant.CODE.UPDATE,
+        names : userNames
+    });
+    // update this socket too
+    socket.emit("userList", {
+        code : Constant.CODE.UPDATE,
+        names : userNames
+    });
+}
+
+function getAllUserList() {
+    var names = [];
+    for (var i = 0; i < sockets.length; i++) {
+        var s = sockets[i];
+        names.push(s.name);
+    }
+    return names;
+}
 
 function getSocketByName(name) {
     for (var i = 0; i < sockets.length; i++) {

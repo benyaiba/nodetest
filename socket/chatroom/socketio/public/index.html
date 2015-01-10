@@ -3,8 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>index</title>
+<link rel="stylesheet" href="lib/bootstrap.css">
 <link rel="stylesheet" href="app.css">
 <script src="lib/jquery-1.11.0.min.js"></script>
+<script src="lib/bootstrap.js"></script>
 <script src="lib/socket.io.js"></script>
 <script src="lib/jquery.cookie.js"></script>
 <script src="common/Constant.js"></script>
@@ -13,18 +15,47 @@
 
 <body>
 
-  <div id="messages"></div>
-  <div id="chatDiv">
-    <input type="text" name="chatContent" id="chatContent" value=""/>
-    <input type="button" name="sendMsgBtn" id="sendMsgBtn" value="发送"/>
-  </div>
-  <div class="error"></div>
-  <div id="setNameMask">
-    <div>
-      <input id="name" type="text" name="name" value="" />
+  <div id="upMain">
+    <div id="upLeft">
+      <div id="messages" class="layoutStyle"></div>
     </div>
-    <div><input id="setNameBtn" type="button" name="setNameBtn" value="OK" /></div>
+    <div id="upRight">
+      <div id="userList" class="layoutStyle"></div>
+    </div>
+  </div>
+  <div id="downMain">
+    <div id="chatDiv" class="layoutStyle">
+      <form class="form-inline" id="messageForm">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" name="chatContent" id="chatContent" value="" />
+            <input type="button" name="sendMsgBtn" id="sendMsgBtn" value="发送" class="btn btn-primary" />
+          </div>
+        </div>
+      </form>
+
+    </div>
   </div>
 
+  <div id="setNameMask">
+    <div id="setNameDiv">
+      <div>
+        <span>请输入昵称：</span>
+      </div>
+      <div>
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="input-group">
+              <input id="name" type="text" name="name" value="" />
+              <input id="setNameBtn" type="button" name="setNameBtn" value="OK" class="btn btn-primary" />
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="error"></div>
 </body>
 </html>

@@ -6,6 +6,7 @@ Constant.CODE = {
 //        "NG_EXISTS": 6,
         "PRIVATE_MSG": 4,
         "MSG": 5,
+        "UPDATE": 7
 };
 
 if (typeof exports != "undefined") {
