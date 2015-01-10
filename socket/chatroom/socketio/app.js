@@ -21,7 +21,10 @@ io.on("connection", function(socket) {
         var leftUserName = socket.name;
         var index = sockets.indexOf(socket);
         sockets.splice(index, 1);
-        socket.broadcast.emit("chat", "【" + leftUserName + "】离开了聊天室");
+        socket.broadcast.emit("chat", {
+            code: Constant.CODE.MSG,
+            msg: "【" + leftUserName + "】离开了聊天室"
+        });
     });
 
     // name setting

@@ -10,13 +10,29 @@
         initSendMsgBtn();
         initUserListSelect();
 
-        setName();
+        initName();
+        preventFormSubmit();
     });
 
     function initIo() {
         socket = io.connect("http://localhost");
     }
+    
+    function initName(){
+        var nameInCookie = $.cookie("chat_name");
+        if(!nameInCookie){
+            showSetNameDiv();
+        }
+    }
 
+    function initSetNameBtn() {
+        $("#setNameBtn").on("click", function() {
+            var name = $("#name").val();
+            $.cookie("chat_name", name);
+            setName();
+        });
+    }
+    
     /**
      * set user name
      */
@@ -33,21 +49,8 @@
                 showBroadcastMsg(null, returnData.msg);
             } else {
                 // set user name ng, show set name mask
-                var showErrorFlg = $("#setNameMask").css("display") != 'none';
-                if (showErrorFlg) {
-                    showErrorMsg(returnData.msg);
-                } else {
-                    showSetNameDiv();
-                }
+                showErrorMsg(returnData.msg);
             }
-        });
-    }
-
-    function initSetNameBtn() {
-        $("#setNameBtn").on("click", function() {
-            var name = $("#name").val();
-            $.cookie("chat_name", name);
-            setName();
         });
     }
 
@@ -76,6 +79,7 @@
 
     function updateUserList(names) {
         $("#userList").html("");
+        $("<a href='#' id='everyUser'>所有人</a>").appendTo($("#userList"));
         for (var i = 0; i < names.length; i++) {
             var name = names[i];
             $("<div></div>").addClass("userItem").html(name).attr("title", name).appendTo($("#userList"));
@@ -87,28 +91,47 @@
             $("#userList .userItem").removeClass("selected");
             $(this).addClass("selected");
         });
+        $("#userList").on("click", "#everyUser", function() {
+            $("#userList .userItem").removeClass("selected");
+        });
+    }
+    
+    function getSelectUserName(){
+        var selectedUser = $("#userList .userItem.selected");
+        if(selectedUser.length == 0){
+            return null;
+        }else{
+            return selectedUser.html();
+        }
     }
 
     /**
      * send message to server
      */
     function initSendMsgBtn() {
-        $("#sendMsgBtn").on("click", function() {
+        
+        function send(){
             var content = $("#chatContent").val();
-            sendMsg(content);
+            var selectedName = getSelectUserName();
+            if(selectedName == null){
+                // no user is selected, send broadcast msg
+                sendMsg(content);
+            }else{
+                // select one, send private message
+                sendPrivateMsg(selectedName, content);
+            }
             clearMsgText();
+        }
+        
+        $("#sendMsgBtn").on("click", function() {
+            send();
         });
         $("#chatContent").on("keypress", function(e) {
             var code = e.keyCode || e.which;
             if (code == 13) {
                 // enter key
-                var content = $("#chatContent").val();
-                sendMsg(content);
-                clearMsgText();
+                send();
             }
-        });
-        $("#messageForm").on("submit", function() {
-            return false;
         });
     }
 
@@ -125,7 +148,7 @@
 
     function sendPrivateMsg(toName, content) {
         socket.emit("chat", {
-            code : Constant.CODE.MSG,
+            code : Constant.CODE.PRIVATE_MSG,
             toName : toName,
             msg : content
         }, function(returnData) {
@@ -161,11 +184,17 @@
     function showPrivateMsg(from, msg) {
         var privateMsg = null;
         if (from) {
-            privateMsg = from + "对你说：" + msg;
+            privateMsg = "【" + from + "】"+ "对你说：" + msg;
         } else {
             privateMsg = "你说：" + msg;
         }
         $("<div></div>").addClass("privateMsg").html(privateMsg).appendTo($("#messages"));
+    }
+    
+    function preventFormSubmit(){
+        $("#messageForm, #nameForm").on("submit", function() {
+            return false;
+        });
     }
 
     function showSetNameDiv() {
@@ -176,7 +205,8 @@
         $("#setNameMask").hide();
     }
 
-    function showErrorMsg() {
+    function showErrorMsg(msg) {
+        $("div.error").html(msg);
         $("div.error").show().delay(1500).fadeOut(500);
     }
 

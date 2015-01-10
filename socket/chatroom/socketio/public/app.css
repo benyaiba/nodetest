@@ -95,14 +95,21 @@
 }
 
 .error {
+  border: 1px solid red;
+  border-radius: 5px;
+  background-color: white;
   color: red;
   position: absolute;
   width: 300px;
-  height: 50px;
+  height: 30px;
+  line-height: 30px;
+  text-align:center;
+  font-weight: bold;
   left: 50%;
   top: 0px;
   margin-left: -150px;
   z-index: 3000;
+  display: none;
 }
 
 #setNameMask {
