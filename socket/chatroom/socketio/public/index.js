@@ -239,6 +239,7 @@
 
     function showSetNameDiv() {
         $("#setNameMask").show();
+        $("#name").focus();
     }
 
     function hideSetNameDiv() {

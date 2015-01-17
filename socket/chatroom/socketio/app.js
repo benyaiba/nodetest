@@ -1,16 +1,23 @@
-var express = require("express");
-var app = express();
-var server = require('http').Server(app);
-var io = require("socket.io")(server);
-
+var io = null;
 var Constant = require("./public/common/Constant.js").Constant;
 var sockets = [];
 
-app.use(express.static(__dirname + "/public"));
-server.listen(3000, function(err) {
-    if (!err) {
-        console.log("server started on port 3000 ...");
-    }
+// start server and user domain to prevent it from crash down
+var d = require('domain').create();
+d.on("error", function(err){
+    console.log(err);
+});
+d.run(function() {
+    var express = require("express");
+    var app = express();
+    var server = require('http').Server(app);
+    io = require("socket.io")(server);
+    app.use(express.static(__dirname + "/public"));
+    server.listen(3000, function(err) {
+        if (!err) {
+            console.log("server started on port 3000 ...");
+        }
+    });
 });
 
 io.on("connection", function(socket) {
@@ -25,6 +32,7 @@ io.on("connection", function(socket) {
             code: Constant.CODE.MSG,
             msg: "【" + leftUserName + "】离开了聊天室"
         });
+        updateUserList();
     });
 
     // name setting
@@ -51,7 +59,7 @@ io.on("connection", function(socket) {
                     msg : "成功登陆聊天室，您的名字是【" + name + "】。"
                 });
                 socket.name = name;
-                updateUserList(socket);
+                updateUserList();
                 socket.broadcast.emit("chat", {
                     code : Constant.CODE.MSG,
                     msg : "欢迎【" + name + "】进入聊天室。"
@@ -102,14 +110,9 @@ io.on("connection", function(socket) {
 });
 
 function updateUserList(socket) {
-    var userNames = getAllUserList(socket);
+    var userNames = getAllUserList();
     // update all others
-    socket.broadcast.emit("userList", {
-        code : Constant.CODE.UPDATE,
-        names : userNames
-    });
-    // update this socket too
-    socket.emit("userList", {
+    io.emit("userList", {
         code : Constant.CODE.UPDATE,
         names : userNames
     });
@@ -117,6 +120,14 @@ function updateUserList(socket) {
 
 function getAllUserList() {
     var names = [];
+    
+    // clean the [dead] socket
+    for(var i=0; i< sockets.length; i++){
+        if(!s || !s.name) {
+            sockets.splice(sockets.indexOf(s), 1);
+        }
+    }
+    
     for (var i = 0; i < sockets.length; i++) {
         var s = sockets[i];
         names.push(s.name);

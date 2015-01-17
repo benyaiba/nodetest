@@ -47,6 +47,7 @@
   bottom: 0px;
   margin: 5px 5px 5px 0px;
   padding: 10px;
+  overflow-y: auto;
 }
 #userList .userItem {
   cursor: pointer;
