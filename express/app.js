@@ -8,7 +8,7 @@ var async = require('async');
 var Deferred = require("Deferred");
 var db = require("mongoskin").db('mongodb://localhost:27017/monolith');
 // require get db schema (local package)
-var mysqlSchema = require("../api/db_schema.js")
+var mysqlSchema = require("../api/db_schema.js");
 
 var app = express();
 
@@ -28,7 +28,7 @@ app.get("/api/mysqlschema", function(req, res){
         ret = callbackFnName ? wrapForJsonp(callbackFnName, ret) : ret;
         res.set({
             "content-type": callbackFnName ? "text/javascript" : "text/json"
-        })
+        });
         res.send(ret).end();
     });
 });
@@ -62,7 +62,7 @@ app.post("/imgUpload", function(req, res){
   var filePath = path.join("c:", "tmp", "tubiao.jpg");
   fs.readFile(filePath, function(err, data){
     if (err) {
-      console.log("err!!!", err)
+      console.log("err!!!", err);
     }else{
       res.json({result: data.toString("base64")});
     }
@@ -93,7 +93,7 @@ app.get("/person", function(req, res){
       iTotalDisplayRecords: searchResult.length,
       sEcho: parseInt(req.query.sEcho,10),
       aaData: searchResult.slice(offset, offset + limit)
-    }
+    };
     res.json(ret);
   });
 });

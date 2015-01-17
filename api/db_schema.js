@@ -39,7 +39,7 @@ function getSchema(next){
             console.info("query column successed !");
         }
         next(err, rows);
-    })
+    });
 }
 
 function changeMysqlSchemaToJava(rows, next){
@@ -64,7 +64,6 @@ function run(pConfig, callback) {
     config = pConfig;
 
     var runSequenceArr = [ createConnection, getSchema, changeMysqlSchemaToJava, output];
-    var ret = null;
     async.waterfall(runSequenceArr, function(err, result) {
         if (err) {
             console.error("err in async", err);
@@ -90,12 +89,12 @@ function getVariableName(dbName){
 }
 
 function getDeclareTypes(type){
-    var type = type.toLowerCase();
+    type = type.toLowerCase();
     if(type.indexOf("bigdecimal") != -1){
         return "BigDecimal";
     }
     if(type.match(/\bint/)){
-        return "Long";
+        return "int";
     }
     if(type.indexOf("double") != -1){
         return "Double";
