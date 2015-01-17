@@ -101,7 +101,7 @@
         $("<a href='#' id='everyUser'>所有人</a>").appendTo($("#userList"));
         for (var i = 0; i < names.length; i++) {
             var name = names[i];
-            $("<div></div>").addClass("userItem").html(name).attr("title", name).appendTo($("#userList"));
+            $("<div></div>").addClass("userItem").text(name).attr("title", name).appendTo($("#userList"));
         }
     }
 
@@ -120,7 +120,7 @@
         if(selectedUser.length == 0){
             return null;
         }else{
-            return selectedUser.html();
+            return selectedUser.text();
         }
     }
 
@@ -195,36 +195,36 @@
         
         case MSG.BROADCASE_SYSTEM:
             className = "systemBroadcastMsg";
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
             
         case MSG.BROADCASE_WARNING:
             className = "systemBroadcastMsg systemWarning";
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
             
         case MSG.BROADCAST_GET:
             msgContent = "【" + name + "】说：" + msgContent;
             className = "userBroadcastMsg";
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
             
         case MSG.BROADCAST_SENT_CALLBACK:
             msgContent = "【" + name + "】说：" + msgContent;
             className = "userBroadcastMsg";
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
             
         case MSG.PRIVATE_GET:
             className = "privateMsgOther";
             msgContent = "【" + name + "】"+ "悄悄对你说：" + msgContent;
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
             
         case MSG.PRIVATE_SENT_CALLBACK:
             className = "privateMsgSelf";
             msgContent = "你悄悄的对【" + name + "】"+ "说：" + msgContent;
-            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            $("<div></div>").addClass(className).text(msgContent).appendTo($("#messages"));
             break;
         }
         
