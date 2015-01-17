@@ -81,6 +81,11 @@
   border-radius: 10px;
 }
 
+#messages {
+  overflow-y: auto;
+  padding-bottom: 5px;
+}
+
 #messages > div {
   border: none;
   border-radius: 5px;
@@ -120,6 +125,7 @@
   height: 100%;
   background-color: rgba(31, 27, 27, 0.7);
   z-index: 2000;
+  display:none;
 }
 
 #setNameDiv {
@@ -137,13 +143,25 @@
 }
 
 .systemBroadcastMsg {
-  background-color: #F2B9C6;
+  text-align: center;
+  background-color: #EFC7D0;
+}
+
+#messages .systemWarning{
+  background-color: #C8CBCF;
+  font-style: italic;
 }
 
 .userBroadcastMsg {
-  background-color: #92BBF5;
+  background-color: #BAD0EF;
 }
 
-.privateMsg {
+#messages .privateMsgOther {
+  margin-right: 50px;
+  background-color: #F0BD79;
+}
+
+#messages .privateMsgSelf {
+  margin-left: 50px;
   background-color: #F0BD79;
 }

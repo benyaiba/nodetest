@@ -1,15 +1,30 @@
 (function() {
 
     var socket = null;
+    var MSG = {
+            BROADCAST_SENT_CALLBACK:1,
+            BROADCAST_GET: 2,
+            BROADCASE_SYSTEM: 3,
+            BROADCASE_WARNING: 4,
+            PRIVATE_SENT_CALLBACK: 5,
+            PRIVATE_GET: 6
+    };
 
     $(function() {
         initIo();
+        
+        // get message from server
         initIoMessage();
         initUpdateUserList();
+        
+        // send message to server
         initSetNameBtn();
         initSendMsgBtn();
+        
+        // js associate user operation
         initUserListSelect();
 
+        // init js
         initName();
         preventFormSubmit();
     });
@@ -22,6 +37,8 @@
         var nameInCookie = $.cookie("chat_name");
         if(!nameInCookie){
             showSetNameDiv();
+        }else{
+            setName();
         }
     }
 
@@ -46,9 +63,10 @@
                 // set user name ok
                 hideSetNameDiv();
                 socket.name = nameInCookie;
-                showBroadcastMsg(null, returnData.msg);
+                showMessage(MSG.BROADCASE_SYSTEM, null, returnData.msg);
             } else {
                 // set user name ng, show set name mask
+                showSetNameDiv();
                 showErrorMsg(returnData.msg);
             }
         });
@@ -60,9 +78,10 @@
     function initIoMessage() {
         socket.on("chat", function(data) {
             if (data.code == Constant.CODE.MSG) {
-                showBroadcastMsg(data.from, data.msg);
+                var messageType = data.from ? MSG.BROADCAST_GET : MSG.BROADCASE_SYSTEM;
+                showMessage(messageType, data.from, data.msg);
             } else {
-                showPrivateMsg(data.from, data.msg);
+                showMessage(MSG.PRIVATE_GET, data.from, data.msg);
             }
         });
     }
@@ -140,8 +159,10 @@
             code : Constant.CODE.MSG,
             msg : content
         }, function(returnData) {
-            if (returnData.code = Constant.CODE.OK) {
-                showBroadcastMsg(socket.name, returnData.msg);
+            if (returnData.code == Constant.CODE.OK) {
+                showMessage(MSG.BROADCAST_SENT_CALLBACK, socket.name, returnData.msg);
+            }else{
+                showMessage(MSG.BROADCASE_WARNING, null, returnData.msg);
             }
         });
     }
@@ -152,8 +173,10 @@
             toName : toName,
             msg : content
         }, function(returnData) {
-            if (returnData.code = Constant.CODE.OK) {
-                showPrivateMsg(null, returnData.msg);
+            if (returnData.code == Constant.CODE.OK) {
+                showMessage(MSG.PRIVATE_SENT_CALLBACK, toName, returnData.msg);
+            }else {
+                showMessage(MSG.BROADCASE_WARNING, null, returnData.msg);
             }
         });
     }
@@ -161,34 +184,51 @@
     function clearMsgText() {
         $("#chatContent").val("");
     }
-
+  
     /**
-     * show broadcast message
+     * show message
      */
-    function showBroadcastMsg(from, msg) {
-        var broadcastMsg = null;
-        var className = null;
-        if (from) {
-            broadcastMsg = "【" + from + "】说：" + msg;
-            className = "userBroadcastMsg";
-        } else {
-            broadcastMsg = msg;
+    function showMessage(messageType, name, msgContent){
+        var className = "";
+        
+        switch (messageType){
+        
+        case MSG.BROADCASE_SYSTEM:
             className = "systemBroadcastMsg";
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
+            
+        case MSG.BROADCASE_WARNING:
+            className = "systemBroadcastMsg systemWarning";
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
+            
+        case MSG.BROADCAST_GET:
+            msgContent = "【" + name + "】说：" + msgContent;
+            className = "userBroadcastMsg";
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
+            
+        case MSG.BROADCAST_SENT_CALLBACK:
+            msgContent = "【" + name + "】说：" + msgContent;
+            className = "userBroadcastMsg";
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
+            
+        case MSG.PRIVATE_GET:
+            className = "privateMsgOther";
+            msgContent = "【" + name + "】"+ "悄悄对你说：" + msgContent;
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
+            
+        case MSG.PRIVATE_SENT_CALLBACK:
+            className = "privateMsgSelf";
+            msgContent = "你悄悄的对【" + name + "】"+ "说：" + msgContent;
+            $("<div></div>").addClass(className).html(msgContent).appendTo($("#messages"));
+            break;
         }
-        $("<div></div>").addClass(className).html(broadcastMsg).appendTo($("#messages"));
-    }
-
-    /**
-     * show private message
-     */
-    function showPrivateMsg(from, msg) {
-        var privateMsg = null;
-        if (from) {
-            privateMsg = "【" + from + "】"+ "对你说：" + msg;
-        } else {
-            privateMsg = "你说：" + msg;
-        }
-        $("<div></div>").addClass("privateMsg").html(privateMsg).appendTo($("#messages"));
+        
+        $("#messages").scrollTop($("#messages").get(0).scrollHeight);
     }
     
     function preventFormSubmit(){

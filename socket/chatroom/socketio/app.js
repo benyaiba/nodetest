@@ -62,6 +62,15 @@ io.on("connection", function(socket) {
 
     // chat
     socket.on("chat", function(data, callback) {
+        // blank message
+        if(data.msg == null || data.msg.trim() == ""){
+            callback({
+                code: Constant.CODE.NG,
+                msg: "请说点儿什么。。。"
+            });
+            return;
+        }
+        
         if (data.code == Constant.CODE.MSG) {
             // broadcast message
             socket.broadcast.emit("chat", {
@@ -76,7 +85,7 @@ io.on("connection", function(socket) {
                 });
             }
         } else {
-            // private messag
+            // private message
             var toName = data.toName;
             var toSocket = getSocketByName(toName);
             toSocket.emit("chat", {
