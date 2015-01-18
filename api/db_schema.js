@@ -46,10 +46,14 @@ function changeMysqlSchemaToJava(rows, next){
     var retArr = [];
     rows.forEach(function(row){
        var obj = {};
+       obj.comment = row["Comment"];
        obj.name = getVariableName(row["Field"]);
        obj.type = getDeclareTypes(row["Type"]);
-       obj.comment = row["Comment"];
        obj.defaultValue = getDefaultValue(obj.type);
+       
+       obj.dbName = row["Field"];
+       obj.dbType = obj.type;
+       obj.dbOriginType = row["Type"];
        retArr.push(obj);
     });
     next(null, retArr);
