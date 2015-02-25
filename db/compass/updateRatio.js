@@ -31,7 +31,7 @@ var connCore = mysql.createConnection({
 var params = {
   structId: "81122",
   startDate: "2015-02-25",
-  endDate: "2015-02-27",
+  endDate: "2015-02-28",
   ratioFlg: true,
   ratios: [{
       startDate: "2015-02-25",
@@ -89,21 +89,38 @@ function insertReserveDeliveryRatio(next) {
     }
 }
 
-conn.beginTransaction(function(err) {
-    if (err) {
-        console.log("transactin begin error ", err);
-    } else {
+function beginTransaction(callback){
+    conn.beginTransaction(function(err) {
+        // start transaction one ...
+        if (err) {
+            console.log("transactin begin error ", err);
+        }else{
+            connCore.beginTransaction(function(errCore){
+                // start transaction two ...
+                if(errCore){
+                    console.log("transactin begin error (core) ", err);
+                }else{
+                    callback();
+                }
+            });
+        }
+    });
+}
 
-        async.waterfall([ updateStruct, deleteAllRatio, insertReserveDeliveryRatio ], function(error) {
-            if (error) {
-                console.log(error);
-                conn.rollback();
-                conn.end();
-            } else {
-                conn.commit();
-                console.log("done ...");
-                conn.end();
-            }
-        });
-    }
-});
+function main(){
+    async.waterfall([ updateStruct, deleteAllRatio, insertReserveDeliveryRatio ], function(error) {
+        if (error) {
+            console.log(error);
+            conn.rollback();
+            connCore.rollback();
+            process.exit();
+        } else {
+            conn.commit();
+            connCore.commit();
+            console.log("done ...");
+            process.exit();
+        }
+    });
+}
+
+beginTransaction(main);
