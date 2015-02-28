@@ -8,6 +8,7 @@ var smtpTransport = require("nodemailer-smtp-transport");
 var users = require("./userlist").users;
 
 var allMessages = [];
+var okStatus = true;
 var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
@@ -16,8 +17,8 @@ var PASS = "zhao_hongsheng";
 //var PORT = 80;
 
 /* TEST */
-var HOST_IP = "192.168.196.203";
-var PORT = 8304;
+var HOST_IP = "www.baidu.com";
+var PORT = 80;
 
 function getLoginPage(next) {
 //    console.log("-- get login page --");
@@ -142,10 +143,17 @@ function getCardPage(phpCode, token, next) {
         res.on("end", function() {
             var $ = cheerio.load(htmlContent);
             var records = $(".Bug_table tr");
-            if(!records || recordes.length == 0){
-                allMessages.push(USER_NAME + " : 信息无法取得");
-            }
             var checkResult = checkCard(records, $);
+            if(!records || records.length == 0){
+                // 无法取得签到信息，密码错误？
+                allMessages.push(USER_NAME + " : 签到信息无法取得");
+                okStatus = false;
+            }
+            if(checkResult != null){
+                // 存在异常的签到信息。
+                allMessages.push(USER_NAME + " " + checkResult);
+                okStatus = false;
+            }
             next(null, checkResult);
         });
     });
@@ -156,9 +164,8 @@ function getCardPage(phpCode, token, next) {
 function sendMail(checkResult, next){
     if(!checkResult){
         next(null);
+        return;
     }
-    
-    allMessages.push(USER_NAME + " " + checkResult);
     
     var transporter = nodemailer.createTransport(smtpTransport({
         host: "192.168.196.6",
@@ -167,7 +174,7 @@ function sendMail(checkResult, next){
     transporter.sendMail({
         from: "no-replay@microad.cn",
         to: USER_NAME + "@microad-tech.com",
-        subject: "异常打卡记录",
+        subject: "异常签到记录",
         text: checkResult
     });
     next(null);
@@ -181,7 +188,7 @@ function sendMailToAdmin(){
     transporter.sendMail({
         from: "no-replay@microad.cn",
         to: "zhao_hongsheng@microad-tech.com",
-        subject: "异常打卡记录(ADMIN)",
+        subject: "异常签到记录(ADMIN)",
         text: allMessages.join("\r\n")
     });
 }
@@ -205,14 +212,14 @@ function checkCard(trs, $){
         }else{
             var date = getYesterday(begin);
             if(!isInRange(date, "07:30", "08:30")){
-                errorMsgArr.push("异常的上班打卡时间：" + begin);
+                errorMsgArr.push("异常的上班签到时间：" + begin);
             }
             date = getYesterday(end);
             if(!isInRange(date, "17:00", "17:30")){
-                errorMsgArr.push("异常的下班打卡时间：" + end);
+                errorMsgArr.push("异常的下班签退时间：" + end);
             }
             if((otBegin != "-" && otEnd=="-") || (otBegin == "-" && otEnd !="-")){
-                errorMsgArr.push("异常的加班打卡时间：-");
+                errorMsgArr.push("异常的加班签到/签退时间：-");
             }
         }
     }
@@ -312,13 +319,15 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 };
 
-function checkOneUsre(next){
+function checkOneUser(next){
     async.waterfall([ getLoginPage, login, getCardPage, sendMail ], function(err) {
         if (err) {
             console.log("err -- ", err);
         } else {
             console.log(USER_NAME, "done ...");
-            allMessages.push(USER_NAME + " done...");
+            if(okStatus == true){
+                allMessages.push(USER_NAME + " : [ALL OK]");
+            }
             allMessages.push("------------------- ");
         }
         next(null);
@@ -327,9 +336,10 @@ function checkOneUsre(next){
 
 function main(){
     async.each(users, function(user, eachNext){
+        okStatus = true;
         USER_NAME = user.name;
         PASS = user.pass;
-        checkOneUsre(eachNext);
+        checkOneUser(eachNext);
     }, function(err){
         if(err){
             console.log("err - ", err);
