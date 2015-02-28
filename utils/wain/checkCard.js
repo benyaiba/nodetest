@@ -7,7 +7,7 @@ var smtpTransport = require("nodemailer-smtp-transport");
 
 var users = require("./userlist").users;
 
-var allErrors = [];
+var allMessages = [];
 var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
@@ -143,7 +143,7 @@ function getCardPage(phpCode, token, next) {
             var $ = cheerio.load(htmlContent);
             var records = $(".Bug_table tr");
             if(!records || recordes.length == 0){
-                allErrors.push(USER_NAME + " : 信息无法取得");
+                allMessages.push(USER_NAME + " : 信息无法取得");
             }
             var checkResult = checkCard(records, $);
             next(null, checkResult);
@@ -158,7 +158,7 @@ function sendMail(checkResult, next){
         next(null);
     }
     
-    allErrors.push(USER_NAME + " " + checkResult);
+    allMessages.push(USER_NAME + " " + checkResult);
     
     var transporter = nodemailer.createTransport(smtpTransport({
         host: "192.168.196.6",
@@ -182,7 +182,7 @@ function sendMailToAdmin(){
         from: "no-replay@microad.cn",
         to: "zhao_hongsheng@microad-tech.com",
         subject: "异常打卡记录(ADMIN)",
-        text: allErrors.join("\r\n")
+        text: allMessages.join("\r\n")
     });
 }
 
@@ -318,6 +318,8 @@ function checkOneUsre(next){
             console.log("err -- ", err);
         } else {
             console.log(USER_NAME, "done ...");
+            allMessages.push(USER_NAME + " done...");
+            allMessages.push("------------------- ");
         }
         next(null);
     });
