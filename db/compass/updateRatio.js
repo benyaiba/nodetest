@@ -2,7 +2,24 @@ var extend = require("xtend");
 var mysql = require('mysql');
 var async = require("async");
 
+/* ST */
+//var conn = mysql.createConnection({
+//    host     : '192.168.196.10',
+//    port     : '9540',
+//    database : "compass_master_db",
+//    user     : 'root',
+//    password : 'password'
+//  });
+//
+//var connCore = mysql.createConnection({
+//      host     : '192.168.196.10',
+//  port     : '9540',
+//  database : "core_master_db",
+//  user     : 'root',
+//  password : 'password'
+//});
 
+/* DEVELOP */
 var conn = mysql.createConnection({
   host     : '192.168.196.10',
   port     : '4306',
@@ -19,6 +36,7 @@ var connCore = mysql.createConnection({
     password : 'password'
   });
 
+/* HOME */
 //var conn = mysql.createConnection({
 //  host     : 'localhost',
 //  port     : '3306',
@@ -36,17 +54,17 @@ var connCore = mysql.createConnection({
 
 
 var params = {
-  structId: "81191",
-  startDate: "2015-02-20",
-  endDate: "2015-02-28",
+  structId: "81241",
+  startDate: "2015-02-25",
+  endDate: "2015-03-10",
   ratioFlg: true,
   ratios: [{
-      startDate: "2015-02-20",
-      endDate: "2015-02-28",
+      startDate: "2015-02-25",
+      endDate: "2015-03-10",
       deliveryRatio: "13.000",
       forecastCpm: "14.0000"
   },{
-      startDate: "2015-02-26",
+      startDate: "2015-02-25",
       endDate: "2015-02-27",
       deliveryRatio: "13.000",
       forecastCpm: "14.0000"
