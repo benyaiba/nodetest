@@ -1,36 +1,23 @@
 var http = require("http");
-var cheerio = require('cheerio');
-var querystring = require('querystring');
+var cheerio = require("cheerio");
+var querystring = require("querystring");
 var async = require("async");
+var nodemailer = require("nodemailer");
+var smtpTransport = require("nodemailer-smtp-transport");
 
-Date.prototype.Format = function (fmt) { //author: meizz
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
+var users = require("./userlist").users;
 
+var allErrors = [];
+var USER_NAME = "zhao_hongsheng";
+var PASS = "zhao_hongsheng";
 
 /* PRODUCT */
 //var HOST_IP = "192.168.196.211";
 //var PORT = 80;
-//var USER_NAME = "zhao_hongsheng";
-//var PASS = "zhao_hongsheng";
 
 /* TEST */
 var HOST_IP = "192.168.196.203";
 var PORT = 8304;
-var USER_NAME = "yanglf1";
-var PASS = "1";
 
 function getLoginPage(next) {
 //    console.log("-- get login page --");
@@ -144,8 +131,8 @@ function getCardPage(phpCode, token, next) {
 //        debugResponse(res);
 
         // get php code from header
-        var headerStr = JSON.stringify(res.headers);
-        var phpCode = getStrByReg(headerStr, "CAKEPHP=.*?(?=;)") || "";
+//        var headerStr = JSON.stringify(res.headers);
+//        var phpCode = getStrByReg(headerStr, "CAKEPHP=.*?(?=;)") || "";
 
         res.setEncoding("utf8");
         var htmlContent = "";
@@ -155,31 +142,85 @@ function getCardPage(phpCode, token, next) {
         res.on("end", function() {
             var $ = cheerio.load(htmlContent);
             var records = $(".Bug_table tr");
-            checkCard(records, $);
-            next(null, phpCode, token);
+            if(!records || recordes.length == 0){
+                allErrors.push(USER_NAME + " : 信息无法取得");
+            }
+            var checkResult = checkCard(records, $);
+            next(null, checkResult);
         });
     });
 
     req.end();
 }
 
-function checkCard(trs, $){
+function sendMail(checkResult, next){
+    if(!checkResult){
+        next(null);
+    }
+    
+    allErrors.push(USER_NAME + " " + checkResult);
+    
+    var transporter = nodemailer.createTransport(smtpTransport({
+        host: "192.168.196.6",
+        port: 25
+    }));
+    transporter.sendMail({
+        from: "no-replay@microad.cn",
+        to: USER_NAME + "@microad-tech.com",
+        subject: "异常打卡记录",
+        text: checkResult
+    });
+    next(null);
+}
 
+function sendMailToAdmin(){
+    var transporter = nodemailer.createTransport(smtpTransport({
+        host: "192.168.196.6",
+        port: 25
+    }));
+    transporter.sendMail({
+        from: "no-replay@microad.cn",
+        to: "zhao_hongsheng@microad-tech.com",
+        subject: "异常打卡记录(ADMIN)",
+        text: allErrors.join("\r\n")
+    });
+}
+
+function checkCard(trs, $){
+    if(!trs || trs.length == 0){
+        return null;
+    }
+    var errorMsgArr = [];
+    var yesterday = getYesterday().Format("yyyy-MM-dd");
     for(var i=0;i< trs.length; i++){
         var trItem = trs[i];
-        var userName = trim($("td:nth-child(1)", trItem).text());
-        var date = trim($("td:nth-child(2)", trItem).text());
+        var dateStr = trim($("td:nth-child(2)", trItem).text());
         var begin = trim($("td:nth-child(3)", trItem).text());
         var end = trim($("td:nth-child(4)", trItem).text());
         var otBegin = trim($("td:nth-child(5)", trItem).text());
         var otEnd = trim($("td:nth-child(6)", trItem).text());
 
-        var yesterday = getYesterday().Format("yyyy-MM-dd");
-        if(date != yesterday){
+        if(dateStr != yesterday){
             continue;
         }else{
-
+            var date = getYesterday(begin);
+            if(!isInRange(date, "07:30", "08:30")){
+                errorMsgArr.push("异常的上班打卡时间：" + begin);
+            }
+            date = getYesterday(end);
+            if(!isInRange(date, "17:00", "17:30")){
+                errorMsgArr.push("异常的下班打卡时间：" + end);
+            }
+            if((otBegin != "-" && otEnd=="-") || (otBegin == "-" && otEnd !="-")){
+                errorMsgArr.push("异常的加班打卡时间：-");
+            }
         }
+    }
+    if(errorMsgArr.length == 0){
+        return null;
+    }else{
+        errorMsgArr.unshift(yesterday);
+        return errorMsgArr.join("\r\n");
     }
 }
 
@@ -188,14 +229,15 @@ function isInRange(date, start, end){
     var sm = start.split(":")[1];
     var eh = end.split(":")[0];
     var em = end.split(":")[1];
+    var time = date.getTime();
 
-    var startDate = getYesterday();
+    var startDate = new Date(time);
     startDate.setHours(parseInt(sh, 10));
     startDate.setMinutes(parseInt(sm, 10));
     startDate.setSeconds(0);
     startDate.setMilliseconds(0);
 
-    var endDate = getYesterday();
+    var endDate = new Date(time);
     endDate.setHours(parseInt(eh, 10));
     endDate.setMinutes(parseInt(em, 10));
     endDate.setSeconds(0);
@@ -211,8 +253,16 @@ function isInRange(date, start, end){
 
 }
 
-function getYesterday(){
+function getYesterday(hm){
     var today = new Date();
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+    if(hm){
+        var h = hm.split(":")[0];
+        var m = hm.split(":")[1];
+        today.setHours(parseInt(h, 10));
+        today.setMinutes(parseInt(m, 10));
+    }
     var yTime = today.getTime() - 24 * 60 * 60 * 1000;
     return new Date(yTime);
 }
@@ -246,10 +296,45 @@ function getStrByReg(str, reg) {
     }
 }
 
-async.waterfall([ getLoginPage, login, getCardPage ], function(err) {
-    if (err) {
-        console.log("err -- ", err);
-    } else {
-        console.log("done ...");
-    }
-});
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
+
+function checkOneUsre(next){
+    async.waterfall([ getLoginPage, login, getCardPage, sendMail ], function(err) {
+        if (err) {
+            console.log("err -- ", err);
+        } else {
+            console.log(USER_NAME, "done ...");
+        }
+        next(null);
+    });
+}
+
+function main(){
+    async.each(users, function(user, eachNext){
+        USER_NAME = user.name;
+        PASS = user.pass;
+        checkOneUsre(eachNext);
+    }, function(err){
+        if(err){
+            console.log("err - ", err);
+        }else {
+            sendMailToAdmin();
+        }
+    });
+}
+
+main();
