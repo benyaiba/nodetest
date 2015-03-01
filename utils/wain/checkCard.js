@@ -180,7 +180,7 @@ function sendMail(checkResult, next){
     next(null);
 }
 
-function sendMailToAdmin(){
+function sendSummaryMailToAdmin(){
     var transporter = nodemailer.createTransport(smtpTransport({
         host: "192.168.196.6",
         port: 25
@@ -188,8 +188,21 @@ function sendMailToAdmin(){
     transporter.sendMail({
         from: "no-replay@microad.cn",
         to: "zhao_hongsheng@microad-tech.com",
-        subject: "异常签到记录(ADMIN)",
+        subject: "异常签到报告 (ADMIN)",
         text: allMessages.join("\r\n")
+    });
+}
+
+function sendErrorMailToAdmin(e){
+    var transporter = nodemailer.createTransport(smtpTransport({
+        host: "192.168.196.6",
+        port: 25
+    }));
+    transporter.sendMail({
+        from: "no-replay@microad.cn",
+        to: "zhao_hongsheng@microad-tech.com",
+        subject: "【Exception】异常签到Batch (ADMIN)",
+        text: e
     });
 }
 
@@ -344,9 +357,14 @@ function main(){
         if(err){
             console.log("err - ", err);
         }else {
-            sendMailToAdmin();
+            sendSummaryMailToAdmin();
         }
     });
 }
 
-main();
+var d = require("domain").create();
+d.on("error", function(e){
+    console.log("in domain - ", e);
+    sendErrorMailToAdmin(e);
+});
+d.run(main);
