@@ -9,7 +9,7 @@ var users = require("./userlist").users;
 
 var allMessages = [];
 var okStatus = true;
-var SEND_MAIL_FLAG = true;
+var SEND_MAIL_FLAG = false;
 var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
@@ -209,6 +209,7 @@ function doSendMail(params){
 }
 
 function checkCard(trs, $){
+    throw new Error("eeeeeeeee");
     if(!trs || trs.length == 0){
         return null;
     }
@@ -364,9 +365,14 @@ function main(){
     });
 }
 
-var d = require("domain").create();
-d.on("error", function(e){
-    console.log("in domain - ", e);
+//var d = require("domain").create();
+//d.on("error", function(e){
+//    console.log("in domain - ", e);
+//    sendErrorMailToAdmin(e);
+//});
+//d.run(main);
+
+process.on("uncaughtException", function(e){
     sendErrorMailToAdmin(e);
 });
-d.run(main);
+main();
