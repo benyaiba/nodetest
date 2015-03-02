@@ -9,6 +9,7 @@ var users = require("./userlist").users;
 
 var allMessages = [];
 var okStatus = true;
+var SEND_MAIL_FLAG = true;
 var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
@@ -17,8 +18,8 @@ var PASS = "zhao_hongsheng";
 //var PORT = 80;
 
 /* TEST */
-var HOST_IP = "www.baidu.com";
-var PORT = 80;
+var HOST_IP = "192.168.196.203";
+var PORT = 8304;
 
 function getLoginPage(next) {
 //    console.log("-- get login page --");
@@ -166,13 +167,8 @@ function sendMail(checkResult, next){
         next(null);
         return;
     }
-    
-    var transporter = nodemailer.createTransport(smtpTransport({
-        host: "192.168.196.6",
-        port: 25
-    }));
-    transporter.sendMail({
-        from: "no-replay@microad.cn",
+
+    doSendMail({
         to: USER_NAME + "@microad-tech.com",
         subject: "异常签到记录",
         text: checkResult
@@ -181,28 +177,34 @@ function sendMail(checkResult, next){
 }
 
 function sendSummaryMailToAdmin(){
-    var transporter = nodemailer.createTransport(smtpTransport({
-        host: "192.168.196.6",
-        port: 25
-    }));
-    transporter.sendMail({
-        from: "no-replay@microad.cn",
+    doSendMail({
         to: "zhao_hongsheng@microad-tech.com",
-        subject: "异常签到报告 (ADMIN)",
+        subject: "【Summary】签到报告 (ADMIN)",
         text: allMessages.join("\r\n")
     });
 }
 
 function sendErrorMailToAdmin(e){
+    doSendMail({
+        to: "zhao_hongsheng@microad-tech.com",
+        subject: "【Exception】异常签到Batch (ADMIN)",
+        text: e
+    });
+}
+
+function doSendMail(params){
+    if(SEND_MAIL_FLAG == false){
+        return;
+    }
     var transporter = nodemailer.createTransport(smtpTransport({
         host: "192.168.196.6",
         port: 25
     }));
     transporter.sendMail({
-        from: "no-replay@microad.cn",
-        to: "zhao_hongsheng@microad-tech.com",
-        subject: "【Exception】异常签到Batch (ADMIN)",
-        text: e
+        from: "wain@microad-tech.com",
+        to: params.to,
+        subject: params.subject,
+        text: params.text
     });
 }
 
@@ -348,7 +350,7 @@ function checkOneUser(next){
 }
 
 function main(){
-    async.each(users, function(user, eachNext){
+    async.eachSeries(users, function(user, eachNext){
         okStatus = true;
         USER_NAME = user.name;
         PASS = user.pass;
