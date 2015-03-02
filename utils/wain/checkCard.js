@@ -14,12 +14,12 @@ var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
 /* PRODUCT */
-//var HOST_IP = "192.168.196.211";
-//var PORT = 80;
+var HOST_IP = "192.168.196.211";
+var PORT = 80;
 
 /* TEST */
-var HOST_IP = "192.168.196.203";
-var PORT = 8304;
+//var HOST_IP = "192.168.196.203";
+//var PORT = 8304;
 
 function getLoginPage(next) {
 //    console.log("-- get login page --");
