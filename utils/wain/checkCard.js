@@ -209,7 +209,6 @@ function doSendMail(params){
 }
 
 function checkCard(trs, $){
-    throw new Error("eeeeeeeee");
     if(!trs || trs.length == 0){
         return null;
     }
@@ -372,7 +371,8 @@ function main(){
 //});
 //d.run(main);
 
-process.on("uncaughtException", function(e){
-    sendErrorMailToAdmin(e);
-});
+//process.on("uncaughtException", function(e){
+//    sendErrorMailToAdmin(e);
+//});
+
 main();
