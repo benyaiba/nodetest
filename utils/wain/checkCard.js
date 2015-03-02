@@ -9,7 +9,7 @@ var users = require("./userlist").users;
 
 var allMessages = [];
 var okStatus = true;
-var SEND_MAIL_FLAG = false;
+var SEND_MAIL_FLAG = true;
 var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
@@ -172,7 +172,7 @@ function sendMail(checkResult, next){
         to: USER_NAME + "@microad-tech.com",
         subject: "异常签到记录",
         text: checkResult
-    });
+    }, next);
     next(null);
 }
 
@@ -197,14 +197,26 @@ function doSendMail(params){
         return;
     }
     var transporter = nodemailer.createTransport(smtpTransport({
-        host: "192.168.196.6",
-        port: 25
+//        debug: true
+//        host: "192.168.196.6",
+//        port: 25
+        host: "smtp.163.com",
+        secure: true,
+        port: 465,
+        auth:{
+            user: "yisuren2@163.com",
+            pass: "801b95"
+        },
     }));
     transporter.sendMail({
-        from: "wain@microad-tech.com",
+        from: "yisuren2@163.com",
         to: params.to,
         subject: params.subject,
         text: params.text
+    }, function(err){
+        if(err){
+            console.log("--- mail err", err);
+        }
     });
 }
 
