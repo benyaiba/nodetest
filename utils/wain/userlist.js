@@ -1,6 +1,36 @@
-var users = [{
-    name: "zhao_hongsheng",
-    pass: "zhao_hongsheng"
-}];
+var users = [{name:"wang_jiyang", pass:"wang_jiyang"},
+             {name:"yan_yong", pass:"yan_yong"},
+             {name:"ma_chao", pass:"ma_chao"},
+             {name:"wang_nan", pass:"wang_nan"},
+             {name:"deng_wenxin", pass:"deng_wenxin"},
+             {name:"li_yang", pass:"li_yang"},
+             {name:"lin_lin", pass:"lin_lin"},
+             {name:"yang_lifeng", pass:"yang_lifeng"},
+             {name:"zhu_dan", pass:"zhu_dan"},
+             {name:"xu_guojin", pass:"xu_guojin"},
+             {name:"li_ningning", pass:"li_ningning"},
+             {name:"sun_tianshu", pass:"sun_tianshu"},
+             {name:"deng_xiaojun", pass:"deng_xiaojun"},
+             {name:"meng_xiangyu", pass:"meng_xiangyu"},
+             {name:"mu_zongyuan", pass:"mu_zongyuan"},
+             {name:"zhao_jie", pass:"zhao_jie"},
+             {name:"li_ye", pass:"li_ye"},
+             {name:"zhao_yan", pass:"zhao_yan"},
+             {name:"bao_chuang", pass:"bao_chuang"},
+             {name:"xu_yao", pass:"xu_yao"},
+             {name:"zhao_hongsheng", pass:"zhao_hongsheng"},
+             {name:"fu_tianyu", pass:"fu_tianyu"},
+             {name:"liu_jia", pass:"liu_jia"},
+             {name:"fu_yuan", pass:"fu_yuan"},
+             {name:"gao_shen", pass:"gao_shen"},
+             {name:"wang_ligang", pass:"wang_ligang"},
+             {name:"li_zhen", pass:"li_zhen"},
+             {name:"wen_huan", pass:"wen_huan"},
+             {name:"liang_jing", pass:"liang_jing"},
+             {name:"li_guanghe", pass:"li_guanghe"},
+             {name:"liu_xiaofeng", pass:"liu_xiaofeng"},
+             {name:"lv_zhaodong", pass:"lv_zhaodong"},
+             {name:"wang_changyuan", pass:"wang_changyuan"}
+];
 
 exports.users = users;
