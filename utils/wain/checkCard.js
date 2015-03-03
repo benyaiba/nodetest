@@ -224,7 +224,8 @@ function checkCard(trs, $) {
         return null;
     }
     var errorMsgArr = [];
-    var yesterday = getYesterday().Format("yyyy-MM-dd");
+    var yesterdayStr = getYesterday().format("yyyy-MM-dd");
+    var yesterday = getYesterday();
     for (var i = 0; i < trs.length; i++) {
         var trItem = trs[i];
         var dateStr = trim($("td:nth-child(2)", trItem).text());
@@ -233,33 +234,50 @@ function checkCard(trs, $) {
         var otBegin = trim($("td:nth-child(5)", trItem).text());
         var otEnd = trim($("td:nth-child(6)", trItem).text());
 
-        if (dateStr != yesterday) {
+        if (dateStr != yesterdayStr) {
             continue;
         } else {
-            var date = getYesterday(begin);
-            if (!isInRange(date, "07:30", "08:30")) {
-                var errMsg = "异常的上班签到时间 - %s ( %s )：%s".format(date.format("yyyy-MM-dd"), date.weekDay(), begin);
+            var beginDate = getYesterday(begin);
+            if (begin == "-" || !isInRange(beginDate, "07:30", "08:30")) {
+                var errMsg = "异常的上班签到时间 ：%s".format(begin);
                 errorMsgArr.push(errMsg);
             }
-            date = getYesterday(end);
-            if (!isInRange(date, "17:00", "17:30")) {
-                var errMsg = "异常的下班签退时间 - %s ( %s )：%s".format(date.format("yyyy-MM-dd"), date.weekDay(), end);
+            var endDate = getYesterday(end);
+            if (end == "-" || !isInRange(endDate, "17:00", "17:30")) {
+                var errMsg = "异常的下班签退时间 ：%s".format(end);
                 errorMsgArr.push(errMsg);
             }
-            if (otBegin !="-" && !isInRange(date, "17:30", "19:00")) {
-                var errMsg = "异常的加班签到时间 - %s ( %s )：%s".format(date.format("yyyy-MM-dd"), date.weekDay(), otBegin);
+            var otBeginDate = getYesterday(otBegin);
+            if (otBegin != "-" && !isInRange(otBeginDate, "17:30", "19:00")) {
+                var errMsg = "异常的加班签到时间 ：%s".format(otBegin);
                 errorMsgArr.push(errMsg);
             }
             if ((otBegin != "-" && otEnd == "-") || (otBegin == "-" && otEnd != "-")) {
-                var errMsg = "异常的加班签到/签退时间  - %s ( %s )：%s".format(date.format("yyyy-MM-dd"), date.weekDay(), "-");
+                var errMsg = "异常的加班签到/签退时间：%s".format("缺少时间");
                 errorMsgArr.push(errMsg);
+            }
+            if (otBegin != "-" && otEnd != "-") {
+                var otBeginDate = getYesterday(otBegin);
+                if(otBeginDate.getTime() < getYesterday("18:00").getTime()){
+                    otBeginDate = getYesterday("18:00");
+                }
+                var otEndDate = getYesterday(otEnd);
+                var hour3 = 3 * 60 * 60 * 1000;
+                var overtime = otEndDate.getTime() - otBeginDate.getTime();
+                if (overtime < hour3) {
+                    var tmpDateTime = Date.parse("2015-01-01 00:00");
+                    tmpDateTime += overtime;
+                    var overTimeStr = new Date(tmpDateTime).format("hh小时:mm分");
+                    var errMsg = "异常加班时间 ： 加班时间为 %s， 不足3小时，请确认".format(overTimeStr);
+                    errorMsgArr.push(errMsg);
+                }
             }
         }
     }
     if (errorMsgArr.length == 0) {
         return null;
     } else {
-        errorMsgArr.unshift(yesterday);
+        errorMsgArr.unshift("%s (%s)".format(yesterdayStr, yesterday.weekDay()));
         return errorMsgArr.join("\r\n");
     }
 }
@@ -336,7 +354,7 @@ function getStrByReg(str, reg) {
     }
 }
 
-Date.prototype.Format = function(fmt) { // author: meizz
+Date.prototype.format = function(fmt) { // author: meizz
     var o = {
         "M+": this.getMonth() + 1, // 月份
         "d+": this.getDate(), // 日
