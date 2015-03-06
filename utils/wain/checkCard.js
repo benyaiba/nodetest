@@ -161,12 +161,13 @@ function getCardPage(phpCode, token, next) {
     req.end();
 }
 
-function sendMail(checkResult, next) {
+function sendErrorMail(checkResult, next) {
     if (!checkResult) {
         next(null);
         return;
     }
 
+    checkResult += getNotification();
     doSendMail({
         to: USER_NAME + "@microad-tech.com",
         subject: "异常签到记录",
@@ -404,7 +405,7 @@ String.prototype.format = function() {
 };
 
 function checkOneUser(next) {
-    async.waterfall([ getLoginPage, login, getCardPage, sendMail ], function(err) {
+    async.waterfall([ getLoginPage, login, getCardPage, sendErrorMail ], function(err) {
         if (err) {
             console.log("err -- ", err);
         } else {
@@ -416,6 +417,22 @@ function checkOneUser(next) {
         }
         next(null);
     });
+}
+
+function getNotification(){
+    var notification = "" +
+    "\r\n" +
+    "--------------------------------" +
+    "\r\n" +
+    "本邮件自动发送，请勿回复" +
+    "\r\n" +
+    "如果有问题请联系赵洪生(zhao_hongsheng@microad-tech.com)" +
+    "\r\n" +
+    "如果要退订该邮件请修改wain系统密码, http://"+ HOST_IP +
+    "\r\n" +
+    "如果想订阅该邮件，请将wain系统用户名和密码修改一致。";
+    return notification;
+
 }
 
 function main() {
