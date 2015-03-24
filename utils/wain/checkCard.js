@@ -42,7 +42,7 @@ function getLoginPage(next) {
         var token = "";
         res.setEncoding("utf8");
         res.on("data", function(chunk) {
-            htmlContent = chunk;
+            htmlContent += chunk;
         });
         res.on("end", function() {
             var $ = cheerio.load(htmlContent);
@@ -138,7 +138,7 @@ function getCardPage(phpCode, token, next) {
         res.setEncoding("utf8");
         var htmlContent = "";
         res.on("data", function(chunk) {
-            htmlContent = chunk;
+            htmlContent += chunk;
         });
         res.on("end", function() {
             var $ = cheerio.load(htmlContent);
@@ -194,6 +194,7 @@ function sendErrorMailToAdmin(e) {
 
 function doSendMail(params) {
     if (SEND_MAIL_FLAG == false) {
+        console.log(params);
         return;
     }
     var transporter = nodemailer.createTransport(smtpTransport({
