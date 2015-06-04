@@ -54,13 +54,13 @@ var connCore = mysql.createConnection({
 
 
 var params = {
-  structId: "81241",
-  startDate: "2015-02-25",
-  endDate: "2015-03-10",
+  structId: "81255",
+  startDate: "2015-03-01",
+  endDate: "2015-03-13",
   ratioFlg: true,
   ratios: [{
-      startDate: "2015-02-25",
-      endDate: "2015-03-10",
+      startDate: "2015-03-01",
+      endDate: "2015-03-13",
       deliveryRatio: "13.000",
       forecastCpm: "14.0000"
   },{
