@@ -10,11 +10,15 @@ var db = require("mongoskin").db('mongodb://localhost:27017/monolith');
 // require get db schema (local package)
 var mysqlSchema = require("../api/db_schema.js");
 
+var app_df = require("./app_df.js");
+
 var app = express();
 
 app.use(express.logger());
 app.use(express.static(__dirname, "/public"));
 app.use(express.bodyParser());
+
+app_dingfan.extend(app);
 
 app.get("/api/mysqlschema", function(req, res){
     var callbackFnName = req.query.callback;
