@@ -4,9 +4,18 @@ var mysql = require("mysql");
 var conn = null;
 
 function createConnection(params, next) {
+//    conn = mysql.createConnection({
+//        host : "localhost",
+//        port : 3306,
+//        user : "dev",
+//        password : "password",
+//        database : "test",
+//        timeout : 800
+//    });
+
     conn = mysql.createConnection({
-        host : "localhost",
-        port : 3306,
+        host : "192.168.196.8",
+        port : 9626,
         user : "dev",
         password : "password",
         database : "test",
@@ -44,9 +53,10 @@ function s(params, callback) {
 }
 
 function selectDfOrder(params, next) {
-    var sql = "select * from df_order where group_id = ?";
+    var sql = "select * from df_order where group_id = ? and target_date = ?";
+    params.target_date = new Date().format("yyyy-MM-dd");
     console.log(sql, params);
-    conn.query(sql, params, function(err, result){
+    conn.query(sql, [params.group_id, params.target_date], function(err, result){
         if(err){
             console.log(err);
         }
@@ -70,6 +80,7 @@ function i(params, callback) {
 
 function insertDfOrder(params, next){
     var sql = "insert into df_order set ?";
+    params.target_date = new Date();
     conn.query(sql, params, function(err, result){
         if(err){
             console.log(err);

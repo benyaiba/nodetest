@@ -3,7 +3,7 @@
 //var fs = require("fs");
 //var async = require('async');
 //var Deferred = require("Deferred");
-var dingfan = require("../api/dingfan.js");
+var dingfan = require("../db/dingfan/dingfan.js");
 //
 //var app = express();
 //
@@ -12,7 +12,7 @@ var dingfan = require("../api/dingfan.js");
 //app.use(express.bodyParser());
 
 function extend(app){
-    
+
     app.get("/api/df_order/select/:group_id", function(req, res){
         var groupId = req.params.group_id;
         var callbackFnName = req.query.callback;
@@ -32,7 +32,7 @@ function extend(app){
             res.send(ret).end();
         });
     });
-    
+
     app.post("/api/df_order/insert", function(req, res){
         var params = req.body;
         var callbackFnName = req.query.callback;
@@ -50,7 +50,7 @@ function extend(app){
             res.send(ret).end();
         });
     });
-    
+
     app.post("/api/df_order/delete", function(req, res){
         var params = req.body;
         var callbackFnName = req.query.callback;

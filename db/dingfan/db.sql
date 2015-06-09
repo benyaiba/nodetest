@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `df_info` (
   `dish` blob,
   `end_time` int(11) DEFAULT '10',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 数据导出被取消选择。
 
@@ -30,6 +30,6 @@ CREATE TABLE IF NOT EXISTS `df_order` (
   `content` varchar(50) DEFAULT NULL,
   `target_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
