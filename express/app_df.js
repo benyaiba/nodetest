@@ -3,7 +3,7 @@
 //var fs = require("fs");
 //var async = require('async');
 //var Deferred = require("Deferred");
-var dingfan = require("../db/dingfan/dingfan.js");
+var dingfan = require("../db/dingfan/db_df.js");
 //
 //var app = express();
 //
@@ -12,6 +12,26 @@ var dingfan = require("../db/dingfan/dingfan.js");
 //app.use(express.bodyParser());
 
 function extend(app){
+    
+    app.get("/api/df_info/select/:group_id", function(req, res){
+        var groupId = req.params.group_id;
+        var callbackFnName = req.query.callback;
+        dingfan.sInfo({
+            "group_id": groupId,
+        }, function(err, result){
+            var ret = null;
+            if(err){
+                ret = JSON.stringify({"error": err});
+            }else{
+                ret = JSON.stringify(result);
+            }
+            ret = callbackFnName ? wrapForJsonp(callbackFnName, ret) : ret;
+            res.set({
+                "content-type": callbackFnName ? "text/javascript" : "text/json"
+            });
+            res.send(ret).end();
+        });
+    });
 
     app.get("/api/df_order/select/:group_id", function(req, res){
         var groupId = req.params.group_id;

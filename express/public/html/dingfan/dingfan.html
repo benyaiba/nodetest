@@ -4,36 +4,56 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="dingfan.css">
-<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="../../css/jquery.dataTables.css">
 <script src="../../js/jquery-1.10.2.js" type="text/javascript"></script>
-<script src="../../js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../../js/bootstrap.js" type="text/javascript"></script>
 <script src="../../js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.cookie.js" type="text/javascript"></script>
 <script src="dingfan.js" type="text/javascript"></script>
 </head>
 <body>
   <div>
     <ul class="nav nav-pills">
-      <li role="presentation" class="active"><a href="#">Home</a></li>
-      <li role="presentation"><a href="#">Profile</a></li>
-      <li role="presentation"><a href="#">Messages</a></li>
+      <li role="presentation" class="active" groupId="1"><a href="#">吃货1组</a></li>
+      <li role="presentation" groupId="2"><a href="#">吃货2组</a></li>
+      <li role="presentation" groupId="3"><a href="#">吃货3组</a></li>
     </ul>
   </div>
-  <div>
-    <form class="order">
-      <div class="form-group">
-        <label for="name">name</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="订餐人姓名">
-      </div>
-      <div class="form-group">
-        <label for="dish">订餐内容</label>
-        <textarea class="form-control" id="dish" name="content" placeholder="输入订餐内容"></textarea>
-      </div>
-      <button type="button" id="orderBtn" class="btn btn-default">订餐</button>
-    </form>
+
+  <div class="alert alert-danger" role="alert" id="errorDiv">系统异常 。。。</div>
+  
+  <div class="panel panel-danger mainPanel">
+    <div class="panel-heading">订餐结束时间</div>
+    <div class="panel-body" id="endTimeDiv"></div>
   </div>
-  <div id="dfDiv">
-    <table></table>
+
+  <div class="panel panel-success mainPanel">
+    <div class="panel-heading">订餐信息</div>
+    <div class="panel-body" id="dfInfoDiv"></div>
   </div>
+
+  <div class="panel panel-success mainPanel">
+    <div class="panel-heading">订餐</div>
+    <div class="panel-body">
+      <form class="form-inline order">
+        <div class="form-group">
+          <label for="name">姓名</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="订餐人姓名">
+        </div>
+        <div class="form-group">
+          <label for="dish">订餐内容</label>
+          <textarea id="content" class="form-control" name="content" placeholder="输入订餐内容"></textarea>
+        </div>
+        <button type="button" id="orderBtn" class="btn btn-default">订餐</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="panel panel-success mainPanel">
+    <div class="panel-heading">订餐一览</div>
+    <div class="panel-body" id="dfDiv"></div>
+  </div>
+
 </body>
 </html>

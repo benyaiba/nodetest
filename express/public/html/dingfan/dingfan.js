@@ -1,13 +1,49 @@
 (function() {
-    // var baseUrl = "http://127.0.0.1:3000/api/";
 
     $(function() {
         init();
     });
 
     function init() {
+        initGroupSelect();
+        initDfInfo();
         initOrderForm();
         initDfDatatable();
+    }
+    
+    function initDfInfo(){
+        var groupId = getGroupId();
+        $.ajax({
+            method: "GET",
+            url: "/api/df_info/select/" + groupId,
+            dataType: "jsonp",
+            timeout: 3000
+        }).done(function(result){
+            if(!result || !result[0]){
+                return;
+            }
+            var dfInfo = result[0];
+            // support html
+            $("#endTimeDiv").html(dfInfo.end_time);
+            $("#dfInfoDiv").html(dfInfo.dish);
+        }).fail(function(){
+            showError();
+        });
+    }
+    
+    function initGroupSelect(){
+        $("ul.nav > li").on("click", function(){
+            $("ul.nav > li").removeClass("active");
+            $(this).addClass("active");
+            $.cookie("groupId", getGroupId(), {expires: 365});
+            initDfDatatable();
+        });
+        
+        var cookieSelect = $.cookie("groupId");
+        if(cookieSelect){
+            $("ul.nav > li").removeClass("active");
+            $("ul.nav > li[groupId="+cookieSelect+"]").addClass("active");
+        }
     }
 
     function initOrderForm() {
@@ -15,13 +51,13 @@
             $.ajax({
                 method: "POST",
                 url: "/api/df_order/insert",
-                data: $("form.order").serialize(),
+                data: $("form.order").serialize() + "&group_id=" + getGroupId(),
                 timeout: 3000,
             }).done(function(result) {
-                console.log("insert ok --");
+                initDfDatatable();
             }).fail(function() {
-                console.log("insert failed --");
-            })
+                showError();
+            });
         });
     }
 
@@ -29,16 +65,15 @@
 
         $.ajax({
             method: "GET",
-            // TODO
-            url: "/api/df_order/select/" + "1",
-            data: $("form.order").serialize(),
+            url: "/api/df_order/select/" + getGroupId(),
             dataType: "jsonp",
             timeout: 3000
         }).done(function(result) {
             console.log("get order list success ", result);
             initTable(result);
+            initDataTableEvent();
         }).fail(function() {
-            console.log("get order list falied .");
+            showError();
         });
 
     }
@@ -46,24 +81,64 @@
     function initTable(dataSet) {
         $('#dfDiv').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="dfTable"></table>');
 
-        $('#dfTable').dataTable({
-            "data": dataSet,
+        var oTable = $('#dfTable').dataTable({
+            "bDestroy": true,
+            "bFilter": false,
+            "bPaginate": false,
+            "aaData": dataSet,
             "aoColumns": [ {
                 "mData": "id",
-                "title": "ID"
+                "sClass": "right",
+                "sTitle": "ID",
+                "sWidth": "50px"
             }, {
                 "mData": "name",
-                "title": "订餐人"
+                "sTitle": "订餐人"
             }, {
                 "mData": "content",
-                "title": "订餐内容"
+                "sTitle": "订餐内容"
 
             }, {
                 "mData": "id",
-                "render": function(value){
-
+                "sClass": "center",
+                "bSortable": false,
+                "sWidth": "60px",
+                "mRender": function(value, type, row){
+                    var $delBtn = $("<input type='button' class='btn' name='del' value='删除' />");
+                    return $delBtn[0].outerHTML;
                 }
             } ]
         });
+        return oTable;
+    }
+    
+    function initDataTableEvent(){
+        var oTable = $("#dfTable").dataTable();
+        oTable.$("tr").on("click", "input", function(e){
+            var $tr = $(this).closest("tr");
+            var rowData = oTable.fnGetData($tr.get(0));
+            var id = rowData.id;
+            
+            $.ajax({
+                method: "POST",
+                url: "/api/df_order/delete",
+                data: $.param({"id": id}),
+                timeout: 3000
+            }).done(function(){
+                initDfDatatable();
+            }).fail(function(){
+                showError();
+            });
+//            e.preventDefault();
+//            return false;
+        });
+    }
+    
+    function getGroupId(){
+        return $("ul.nav > li.active").attr("groupId");
+    }
+    
+    function showError(){
+        $("#errorDiv").fadeIn(300).delay(2000).fadeOut(500);
     }
 })();
