@@ -34,7 +34,7 @@ imap.once('ready', function() {
                     buffer += chunk;
                     if (info.which === 'TEXT'){
                         console.log(prefix + 'Body [%s] (%d/%d)', inspect(info.which), count, info.size);
-                        console.log(iconv.decode(buffer, 'Shift_JIS'));
+                        console.log(iconv.encode(buffer, 'Shift_JIS'));
                     }
                     
                 });

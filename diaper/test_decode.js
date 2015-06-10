@@ -3,8 +3,6 @@ var harJson = require("./har.json");
 var iconv = require('iconv-lite');
 var fs = require("fs");
 
-// console.log(harJson);
-// console.log(harJson.log.entries);
 function getRequestsFromHar() {
     var entries = harJson.log.entries;
     var urlReg = /https:\/\/advs.*?cgi(?!&)/;
@@ -12,37 +10,40 @@ function getRequestsFromHar() {
     entries.forEach(function(entry) {
         var request = entry.request;
         var url = request.url;
-        // console.log(url, urlReg.test(url));
         if (urlReg.test(url)) {
             requests.push(request);
         }
     });
-    // requests.forEach(function(r){
-    // console.log(r.url);
-    // });
     return requests;
+}
+
+function test1(har){
+    var bufferArr = [];
+    request({
+        har: har
+    }).on("data", function(chunk){
+        bufferArr.push(chunk);
+    }).on("end", function(){
+        var ebody = iconv.decode(Buffer.concat(bufferArr), "Shift_JIS");
+        console.log(ebody);
+    });
+}
+
+function test2(har){
+    request({
+        har: har
+    }).on("error", function(err){
+        console.log(err);
+    }).pipe(iconv.decodeStream("Shift_JIS", function(err, body){
+        console.log(body);
+    }));
 }
 
 var requests = getRequestsFromHar();
 var r = requests[0];
+test1(r);
+//test2(r);
 
-var ebody = "";
-request({
-    har: r
-}, function(err, response, body) {
-    if (err) {
-        cosole.log("err:", err);
-    }else{
-//        var buf = iconv.decode(body, "Shift_JIS");
-//        var rb = iconv.encode(buf, "utf8");
-//        console.log(rb);
-    }
-}).on("data", function(chunk){
-    ebody += chunk;
-}).on("end", function(){
-    ebody = iconv.decode(ebody, "Shift_JIS");
-    console.log(ebody);
-});
 
 //request({
 //    har: r

@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Cache-control" content="no-cache" />
+<meta name="robots" content="index,follow" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="common/css/common_form.css" type="text/css" media="all" />
+<script src="common/js/jquery.min.js"></script>
+<script src="common/js/jquery.sidr.min.js"></script>
+<script src="common/js/common.js"></script>
+<script>
+var ua = navigator.userAgent;
+if(ua.indexOf('iPhone') != -1 || ua.indexOf('Android') != -1){
+document.write('<link rel="stylesheet" href="common/css/common_sp.css" media="all">');
+}
+</script>
+<title>ご注文予約｜エラー</title>
+
+<!-- Framework CSS -->
+<!-- <link rel="stylesheet" href="css/style.css" type="text/css" media="screen, projection" /> -->
+<script src="common/js/GoogleAnalytics.js"></script>
+</head>
+
+<body>
+<!-- wrap -->
+<div id="wrap">
+
+<!-- header -->
+<header id="header">
+	<div class="headerInn">
+		<p class="logo">
+			<a class="al" href="http://www.akachan.jp/">
+				<img alt="アカチャンホンポ" src="common/img/header_logo.gif">
+			</a>
+		</p>
+	</div>	
+</header>
+
+<!-- contents -->
+<div id="contents" class="clearfix">
+	<div class="main oneC">
+		<section class="sectionBorder">
+			<h1 class="headline1">ご注文予約</h1>
+			<h2 class="headline2">エラー</h2>
+			<span class="error">
+				セッションエラーが発生しました。恐れ入りますが、もう一度最初から操作してください。
+			</span>			
+		</section>
+	</div>
+</div>
+
+<!-- footer -->
+<footer id="footer">
+	<div class="pagetop">
+		<p class="gotop" style="display: block;">
+		<a class="al" href="#">
+			<img alt="PAGETOP" src="common/img/gotop.gif">
+		</a>
+		</p>
+	</div>
+	<div class="footerInn">
+	<p class="logo">
+		<a class="al" target="_blank" href="http://www.7andi.com/">
+		<img alt="セブン＆アイHLDGS." src="common/img/footer_logo.jpg">
+		</a>
+	</p>
+	<small>Copyright &copy; AKACHAN HONPO CO., LTD.. All Rights Reserved.</small>	
+	</div>
+</footer>
+
+</div>
+</body>
+
+</html>
