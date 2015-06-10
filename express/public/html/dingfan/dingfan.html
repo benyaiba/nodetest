@@ -18,18 +18,20 @@
       <li role="presentation" class="active" groupId="1"><a href="#">吃货1组</a></li>
       <li role="presentation" groupId="2"><a href="#">吃货2组</a></li>
       <li role="presentation" groupId="3"><a href="#">吃货3组</a></li>
+      <li role="presentation" groupId="4"><a href="#">吃货4组</a></li>
+      <li role="presentation" groupId="5"><a href="#">吃货5组</a></li>
     </ul>
   </div>
 
-  <div class="alert alert-danger" role="alert" id="errorDiv">系统异常 。。。</div>
-  
+  <div class="alert alert-danger mainPanel" role="alert" id="errorDiv">系统异常 。。。</div>
+
   <div class="panel panel-danger mainPanel">
     <div class="panel-heading">订餐结束时间</div>
     <div class="panel-body" id="endTimeDiv"></div>
   </div>
 
   <div class="panel panel-success mainPanel">
-    <div class="panel-heading">订餐信息</div>
+    <div class="panel-heading">订餐信息 <span class="glyphicon glyphicon-link" aria-hidden="true"></span></div>
     <div class="panel-body" id="dfInfoDiv"></div>
   </div>
 
@@ -49,10 +51,12 @@
       </form>
     </div>
   </div>
-  
+
   <div class="panel panel-success mainPanel">
     <div class="panel-heading">订餐一览</div>
-    <div class="panel-body" id="dfDiv"></div>
+    <div class="panel-body" id="dfDiv">
+      <table cellpadding="0" cellspacing="0" border="0" class="display" id="dfTable"></table>
+    </div>
   </div>
 
 </body>

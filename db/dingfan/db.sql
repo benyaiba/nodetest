@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `df_info` (
 CREATE TABLE IF NOT EXISTS `df_order` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(11) DEFAULT NULL,
-  `name` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `content` varchar(100) DEFAULT NULL,
   `target_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)

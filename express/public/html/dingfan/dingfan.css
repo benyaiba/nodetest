@@ -19,7 +19,12 @@ body{
   height: 35px;
 }
 
+#dfTable {
+  width: 100%;
+}
+
 .mainPanel{
   width: 900px;
   margin-top: 10px;
+  margin-bottom: 0px !important;
 }
