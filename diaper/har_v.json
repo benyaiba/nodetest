@@ -1,0 +1,53 @@
+[
+    {
+        "method": "GET",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=x3g5w0vza89l8VfXK3LoKZJkJKzrDA0G",
+        "httpVersion": "HTTP/1.1",
+        "headers": [
+            {
+                "name": "Pragma",
+                "value": "no-cache"
+            },
+            {
+                "name": "Accept-Encoding",
+                "value": "gzip, deflate, sdch"
+            },
+            {
+                "name": "Host",
+                "value": "aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Language",
+                "value": "zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4"
+            },
+            {
+                "name": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
+            },
+            {
+                "name": "Accept",
+                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+                "name": "Cache-Control",
+                "value": "no-cache"
+            },
+            {
+                "name": "Cookie",
+                "value": "sess=6229cf2a40e86e4d8abaca0c41ba7a12; _ga=GA1.2.1930524045.1431846055; _gat=1"
+            },
+            {
+                "name": "Connection",
+                "value": "keep-alive"
+            }
+        ],
+        "queryString": [
+            {
+                "name": "id",
+                "value": "x3g5w0vza89l8VfXK3LoKZJkJKzrDA0G"
+            }
+        ],
+        "headersSize": 559,
+        "bodySize": 0
+    }
+]

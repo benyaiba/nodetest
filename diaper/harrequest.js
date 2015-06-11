@@ -17,6 +17,7 @@ function harrequest(har, cb1, cb2, charset){
     });
 
     request({
+        rejectUnauthorized:false,
         har: har
     }).on("error", function(err){
         console.log("har request error - ", err);
