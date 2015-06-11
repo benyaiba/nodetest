@@ -1,7 +1,7 @@
 [
     {
         "method": "GET",
-        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG",
         "httpVersion": "HTTP/1.1",
         "headers": [
             {
@@ -34,7 +34,7 @@
             },
             {
                 "name": "Cookie",
-                "value": "sess=6229cf2a40e86e4d8abaca0c41ba7a12; _ga=GA1.2.1930524045.1431846055; _gat=1"
+                "value": "sess=8d63a06ab73510d20ab69e37be2be925; _ga=GA1.2.1930524045.1431846055"
             },
             {
                 "name": "Connection",
@@ -47,7 +47,344 @@
                 "value": "gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG"
             }
         ],
-        "headersSize": 559,
+        "cookies": [
+            {
+                "name": "sess",
+                "value": "8d63a06ab73510d20ab69e37be2be925",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_ga",
+                "value": "GA1.2.1930524045.1431846055",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            }
+        ],
+        "headersSize": 551,
         "bodySize": 0
+    },
+    {
+        "method": "POST",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/form_card_no.cgi",
+        "httpVersion": "HTTP/1.1",
+        "headers": [
+            {
+                "name": "Pragma",
+                "value": "no-cache"
+            },
+            {
+                "name": "Origin",
+                "value": "https://aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Encoding",
+                "value": "gzip, deflate"
+            },
+            {
+                "name": "Host",
+                "value": "aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Language",
+                "value": "zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4"
+            },
+            {
+                "name": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
+            },
+            {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+            },
+            {
+                "name": "Accept",
+                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+                "name": "Cache-Control",
+                "value": "no-cache"
+            },
+            {
+                "name": "Referer",
+                "value": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG"
+            },
+            {
+                "name": "Cookie",
+                "value": "sess=8d63a06ab73510d20ab69e37be2be925; _ga=GA1.2.1930524045.1431846055; _gat=1"
+            },
+            {
+                "name": "Connection",
+                "value": "keep-alive"
+            },
+            {
+                "name": "Content-Length",
+                "value": "39"
+            }
+        ],
+        "queryString": [],
+        "cookies": [
+            {
+                "name": "sess",
+                "value": "8d63a06ab73510d20ab69e37be2be925",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_ga",
+                "value": "GA1.2.1930524045.1431846055",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_gat",
+                "value": "1",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            }
+        ],
+        "headersSize": 724,
+        "bodySize": 39,
+        "postData": {
+            "mimeType": "application/x-www-form-urlencoded",
+            "text": "card_no=2800054542024&sbmt=%8E%9F%82%D6",
+            "params": [
+                {
+                    "name": "card_no",
+                    "value": "2800054542024"
+                },
+                {
+                    "name": "sbmt",
+                    "value": "%8E%9F%82%D6"
+                }
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg_form_event_1.cgi",
+        "httpVersion": "HTTP/1.1",
+        "headers": [
+            {
+                "name": "Pragma",
+                "value": "no-cache"
+            },
+            {
+                "name": "Origin",
+                "value": "https://aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Encoding",
+                "value": "gzip, deflate"
+            },
+            {
+                "name": "Host",
+                "value": "aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Language",
+                "value": "zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4"
+            },
+            {
+                "name": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
+            },
+            {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+            },
+            {
+                "name": "Accept",
+                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+                "name": "Cache-Control",
+                "value": "no-cache"
+            },
+            {
+                "name": "Referer",
+                "value": "https://aksale.advs.jp/cp/akachan_sale_pc/form_card_no.cgi"
+            },
+            {
+                "name": "Cookie",
+                "value": "sess=8d63a06ab73510d20ab69e37be2be925; _gat=1; _ga=GA1.2.1930524045.1431846055"
+            },
+            {
+                "name": "Connection",
+                "value": "keep-alive"
+            },
+            {
+                "name": "Content-Length",
+                "value": "106"
+            }
+        ],
+        "queryString": [],
+        "cookies": [
+            {
+                "name": "sess",
+                "value": "8d63a06ab73510d20ab69e37be2be925",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_gat",
+                "value": "1",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_ga",
+                "value": "GA1.2.1930524045.1431846055",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            }
+        ],
+        "headersSize": 696,
+        "bodySize": 106,
+        "postData": {
+            "mimeType": "application/x-www-form-urlencoded",
+            "text": "password=1215&sei=tyo&mei=kosei&sei_kana=tyo&mei_kana=kose&tel1=9910&tel2=3307&tel3=6576&sbmt=%8E%9F%82%D6",
+            "params": [
+                {
+                    "name": "password",
+                    "value": "1215"
+                },
+                {
+                    "name": "sei",
+                    "value": "tyo"
+                },
+                {
+                    "name": "mei",
+                    "value": "kosei"
+                },
+                {
+                    "name": "sei_kana",
+                    "value": "tyo"
+                },
+                {
+                    "name": "mei_kana",
+                    "value": "kose"
+                },
+                {
+                    "name": "tel1",
+                    "value": "9910"
+                },
+                {
+                    "name": "tel2",
+                    "value": "3307"
+                },
+                {
+                    "name": "tel3",
+                    "value": "6576"
+                },
+                {
+                    "name": "sbmt",
+                    "value": "%8E%9F%82%D6"
+                }
+            ]
+        }
+    },
+    {
+        "method": "POST",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg_confirm_event.cgi",
+        "httpVersion": "HTTP/1.1",
+        "headers": [
+            {
+                "name": "Pragma",
+                "value": "no-cache"
+            },
+            {
+                "name": "Origin",
+                "value": "https://aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Encoding",
+                "value": "gzip, deflate"
+            },
+            {
+                "name": "Host",
+                "value": "aksale.advs.jp"
+            },
+            {
+                "name": "Accept-Language",
+                "value": "zh-CN,zh;q=0.8,en;q=0.6,ja;q=0.4"
+            },
+            {
+                "name": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
+            },
+            {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+            },
+            {
+                "name": "Accept",
+                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+                "name": "Cache-Control",
+                "value": "no-cache"
+            },
+            {
+                "name": "Referer",
+                "value": "https://aksale.advs.jp/cp/akachan_sale_pc/reg_form_event_1.cgi"
+            },
+            {
+                "name": "Cookie",
+                "value": "sess=8d63a06ab73510d20ab69e37be2be925; _gat=1; _ga=GA1.2.1930524045.1431846055"
+            },
+            {
+                "name": "Connection",
+                "value": "keep-alive"
+            },
+            {
+                "name": "Content-Length",
+                "value": "15"
+            }
+        ],
+        "queryString": [],
+        "cookies": [
+            {
+                "name": "sess",
+                "value": "8d63a06ab73510d20ab69e37be2be925",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_gat",
+                "value": "1",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            },
+            {
+                "name": "_ga",
+                "value": "GA1.2.1930524045.1431846055",
+                "expires": null,
+                "httpOnly": false,
+                "secure": false
+            }
+        ],
+        "headersSize": 700,
+        "bodySize": 15,
+        "postData": {
+            "mimeType": "application/x-www-form-urlencoded",
+            "text": "sbmt=%91%97%90M",
+            "params": [
+                {
+                    "name": "sbmt",
+                    "value": "%91%97%90M"
+                }
+            ]
+        }
     }
 ]
