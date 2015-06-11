@@ -1,7 +1,7 @@
 [
     {
         "method": "GET",
-        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=x3g5w0vza89l8VfXK3LoKZJkJKzrDA0G",
+        "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG",
         "httpVersion": "HTTP/1.1",
         "headers": [
             {
@@ -44,7 +44,7 @@
         "queryString": [
             {
                 "name": "id",
-                "value": "x3g5w0vza89l8VfXK3LoKZJkJKzrDA0G"
+                "value": "gNJfnVZXSPTpg5wQJarHKtyRVjuPEitG"
             }
         ],
         "headersSize": 559,
