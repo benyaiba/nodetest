@@ -30,19 +30,22 @@ function test1(har){
 }
 
 function test2(har){
+    var convertStream = iconv.decodeStream("Shift_JIS");
+    convertStream.on("data", function(str){
+        console.log(str)
+    });
+
     request({
         har: har
     }).on("error", function(err){
         console.log(err);
-    }).pipe(iconv.decodeStream("Shift_JIS", function(err, body){
-        console.log(body);
-    }));
+    }).pipe(convertStream);
 }
 
 var requests = getRequestsFromHar();
 var r = requests[0];
-test1(r);
-//test2(r);
+//test1(r);
+test2(r);
 
 
 //request({
