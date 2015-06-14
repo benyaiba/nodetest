@@ -10,7 +10,6 @@ var charset = "Shift_JIS";
 var event_id = "5467635266";
 var event_type = "7";
 
-var getMailHar = harJson[2];
 var sessHar = {
     "method" : "GET",
     "url" : "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=6GxfGo4pqOmgJFVHA4d60F4Ar1Uj4BSh"
@@ -27,9 +26,52 @@ var confirmHar = harJson[6];
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%90%e7%97t%8c%a7&event_type=5&sid=37213&kmws=
  * 
  */
-function doIt() {
+
+function doMail() {
+    var config = require("./config.json");
+    var event_id = config.event_id;
+    var event_type = config.event_type;
+    var personArr = config.personArr;
+    personArr.forEach(function(person) {
+        var getMailHar = harJson[2];
+        var params = getMailHar.postData.params;
+        _setValue(params, "event_id", event_id);
+        _setValue(params, "event_type", event_type);
+        _setValue(params, "mail1", person.mail);
+        _setValue(params, "mail2", person.mail);
+
+        erequest({
+            har : getMailHar
+        }, null, function(body) {
+            // console.log(body);
+            if (body.indexOf("送信しました") != -1) {
+                console.log("## 【" + person.mail + "】 confirm mail success");
+            } else {
+                console.log("## 【" + person.mail + "】 confirm mail fail .", person.mail);
+            }
+        }, charset);
+    });
+
+}
+
+function doAll() {
+    var config = require("./config.json");
+    async.each(config.personArr, function(person) {
+        doOne(person);
+    }, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("## all done ...");
+        }
+    });
+}
+
+function doOne(person) {
     var taskArr = [];
-//     taskArr.push(getConfirmMail);
+    taskArr.push(function(next) {
+        next(null, person);
+    });
     taskArr.push(getSess);
     taskArr.push(registSess);
     taskArr.push(postCardNo);
@@ -37,34 +79,20 @@ function doIt() {
     taskArr.push(postConfirmDone);
     async.waterfall(taskArr, function(err) {
         if (err) {
-            console.log("water fall err:", err);
+            console.log("water fall err:", person.mail, err);
             return;
         }
-        console.log("water fall done .");
+        console.log("## one person done ...");
     });
 }
 
-function getConfirmMail(next) {
-    var params = getMailHar.postData.params;
-    _setValue(params, "event_id", event_id);
-    _setValue(params, "event_type", event_type);
-    erequest({
-        har : getMailHar
-    }, null, function(body) {
-//         console.log(body);
-        if(body.indexOf("送信しました") != -1){
-            console.log("## confirm mail success");
-            next(null);
-        }else{
-            console.log("## confirm mail fail .");
-        }
-    }, charset);
-}
-
-function getSess(next) {
+function getSess(person, next) {
     var sess = null;
 
-    var har = sessHar;
+    var har = {
+        method : "GET",
+        url : person.url
+    };
     erequest({
         har : har
     }, function(response) {
@@ -85,36 +113,40 @@ function getSess(next) {
         // get redirect url
         var redirectUrl = /http.*?(?=")/.exec(body)[0];
         console.log("## sess", sess, redirectUrl);
-        next(null, sess, redirectUrl);
+        person.sess = sess;
+        person.sessUrl = redirectUrl;
+        next(null, person);
     }, charset);
 }
 
-function registSess(sess, url, next) {
+function registSess(person, next) {
     erequest({
-        url : url,
+        url : person.sessUrl,
         method : "GET",
         headers : {
-            "Cookie" : "sess=" + sess
+            "Cookie" : "sess=" + person.sess
         }
     }, null, function(body) {
         // console.log(body);
         if (body.indexOf("次へ") != -1) {
             console.log("## 予約始め...");
-            next(null, sess);
+            next(null, person);
         } else {
             console.log("## 予約待ち中...");
-            registSess(sess, url, next);
+            registSess(person, next);
         }
     }, charset);
 }
 
-function postCardNo(sess, next) {
+function postCardNo(person, next) {
     var har = cardNoHar;
-    _setHeaderSess(har.headers, sess);
+    var params = har.postData.params;
+    _setHeaderSess(har.headers, person.sess);
+    _setValue(params, "card_no", person.card_no);
     erequest({
         har : har
     }, function(response) {
-        next(null, sess);
+        next(null, person);
     }, function(body) {
         if (body.indexOf("パスワード") != -1) {
             console.log("## postCardNo -- ok");
@@ -122,13 +154,22 @@ function postCardNo(sess, next) {
     }, charset);
 }
 
-function postInfo(sess, next) {
+function postInfo(person, next) {
     var har = infoHar;
-    _setHeaderSess(har.headers, sess);
+    var params = har.postData.params;
+    _setHeaderSess(har.headers, person.sess);
+    _setValue(params, "password", person.password);
+    _setValue(params, "sei", person.sei);
+    _setValue(params, "mei", person.mei);
+    _setValue(params, "sei_kana", person.sei_kana);
+    _setValue(params, "mei", person.mei_kana);
+    _setValue(params, "tel1", person.tel1);
+    _setValue(params, "tel2", person.tel2);
+    _setValue(params, "tel3", person.tel3);
     erequest({
         har : har
     }, function(response) {
-        next(null, sess);
+        next(null, person);
     }, function(body) {
         if (body.indexOf("パスワード") != -1) {
             console.log("## post info -- ok");
@@ -136,17 +177,17 @@ function postInfo(sess, next) {
     }, charset);
 }
 
-function postConfirmDone(sess, next) {
+function postConfirmDone(person, next) {
     var har = confirmHar;
-    _setHeaderSess(har.headers, sess);
+    _setHeaderSess(har.headers, person.sess);
     erequest({
         har : har
     }, function(response) {
     }, function(body) {
         if (body.indexOf("予約完了") != -1) {
-            console.log("## post confirm done -- ok");
-            console.log("## SUCCESS !!");
-            next(null, sess);
+            console.log("## post confirm -- ok");
+            console.log("## 【" + person.mail + "】SUCCESS !!");
+            next(null, person);
         }
     }, charset);
 }
@@ -169,4 +210,4 @@ function _setValue(arr, name, value) {
     });
 }
 
-doIt();
+doAll();
