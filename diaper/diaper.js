@@ -1,22 +1,16 @@
 var request = require('request');
-var harJson = require("./har_v.json");
 var iconv = require('iconv-lite');
 var fs = require("fs");
-var erequest = require("./encoderequest");
 var async = require("async");
+var erequest = require("./encoderequest");
 
-var charset = "Shift_JIS";
-
-var event_id = "5467635266";
-var event_type = "7";
-
-var sessHar = {
-    "method" : "GET",
-    "url" : "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=6GxfGo4pqOmgJFVHA4d60F4Ar1Uj4BSh"
-};
+var harJson = require("./har_v.json");
+var getMailHar = harJson[2];
 var cardNoHar = harJson[4];
 var infoHar = harJson[5];
 var confirmHar = harJson[6];
+
+var charset = "Shift_JIS";
 
 /**
  * L size:
@@ -27,21 +21,44 @@ var confirmHar = harJson[6];
  * 
  */
 
-function doMail() {
+function run() {
+    var args = process.argv;
+    args = Array.prototype.slice.apply(args);
+    args.splice(0, 2);
+
+    if (!args || args.length == 0) {
+        console.log("1 - send confirm mail");
+        console.log("2 - get url from confirm mail, set to config.json");
+        console.log("3 - reservation start !!");
+        return;
+    }
+    if (args[0] == "1") {
+        sendConfirmMail();
+    }
+    if (args[0] == "2") {
+        getUrlFromMail();
+    }
+    if (args[0] == "3") {
+        doOrder();
+    }
+
+}
+
+function sendConfirmMail() {
     var config = require("./config.json");
     var event_id = config.event_id;
     var event_type = config.event_type;
     var personArr = config.personArr;
     personArr.forEach(function(person) {
-        var getMailHar = harJson[2];
-        var params = getMailHar.postData.params;
+        var har = getMailHar;
+        var params = har.postData.params;
         _setValue(params, "event_id", event_id);
         _setValue(params, "event_type", event_type);
         _setValue(params, "mail1", person.mail);
         _setValue(params, "mail2", person.mail);
 
         erequest({
-            har : getMailHar
+            har : har
         }, null, function(body) {
             // console.log(body);
             if (body.indexOf("送信しました") != -1) {
@@ -51,13 +68,17 @@ function doMail() {
             }
         }, charset);
     });
-
 }
 
-function doAll() {
+function getUrlFromMail() {
+    var mailPop3 = require("./mail_pop3.js");
+    mailPop3.getUrl();
+}
+
+function doOrder() {
     var config = require("./config.json");
     async.each(config.personArr, function(person) {
-        doOne(person);
+        doOneOrder(person);
     }, function(err) {
         if (err) {
             console.log(err);
@@ -67,7 +88,7 @@ function doAll() {
     });
 }
 
-function doOne(person) {
+function doOneOrder(person) {
     var taskArr = [];
     taskArr.push(function(next) {
         next(null, person);
@@ -188,6 +209,9 @@ function postConfirmDone(person, next) {
             console.log("## post confirm -- ok");
             console.log("## 【" + person.mail + "】SUCCESS !!");
             next(null, person);
+        } else {
+            console.log("## resend post confirm done for 【" + person.mail + "】");
+            postConfirmDone(person, next);
         }
     }, charset);
 }
@@ -210,4 +234,4 @@ function _setValue(arr, name, value) {
     });
 }
 
-doAll();
+run();
