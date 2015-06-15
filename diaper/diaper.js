@@ -20,7 +20,6 @@ var charset = "Shift_JIS";
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%90%e7%97t%8c%a7&event_type=5&sid=37213&kmws=
  * 
  */
-
 function run() {
     var args = process.argv;
     args = Array.prototype.slice.apply(args);
