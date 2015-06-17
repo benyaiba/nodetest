@@ -182,7 +182,7 @@ function postInfo(person, next) {
     _setValue(params, "sei", person.sei);
     _setValue(params, "mei", person.mei);
     _setValue(params, "sei_kana", person.sei_kana);
-    _setValue(params, "mei", person.mei_kana);
+    _setValue(params, "mei_kana", person.mei_kana);
     _setValue(params, "tel1", person.tel1);
     _setValue(params, "tel2", person.tel2);
     _setValue(params, "tel3", person.tel3);
