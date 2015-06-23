@@ -14,7 +14,10 @@ var charset = "Shift_JIS";
 
 /**
  * L size:
+ * gaoqi:
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%8cQ%94n%8c%a7&event_type=7&sid=37031&kmws=
+ * shengu:
+ * http://aksale.advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%258d%25e9%258b%25ca%258c%25a7&event_type=7&sid=37189&kmws=
  * 
  * country for test:
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%90%e7%97t%8c%a7&event_type=5&sid=37213&kmws=

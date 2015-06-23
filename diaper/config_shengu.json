@@ -1,0 +1,38 @@
+{
+    "event_type": "7",
+    "event_id": "2772649792",
+    "personArr": [
+        {
+            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=rLX23Vp6EO73QLa6Lc1HMjYKY8X3HrXo",
+            "sess": "",
+            "sessUrl": "",
+            "card_no": "2800047054053",
+            "mail": "yisuren7@hotmail.com",
+            "mailPassword": "zhao_HONGSHENG",
+            "password": "1215",
+            "sei": "tyou",
+            "mei": "syuku",
+            "sei_kana": "tyou",
+            "mei_kana": "syuku",
+            "tel1": "090",
+            "tel2": "2964",
+            "tel3": "6882"
+        },
+        {
+            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=aWxGaORhIDq2F30oiZFVqZCREIKD9735",
+            "sess": "",
+            "sessUrl": "",
+            "card_no": "2800054542024",
+            "mail": "yisuren8@hotmail.com",
+            "mailPassword": "zhao_HONGSHENG",
+            "password": "1215",
+            "sei": "i",
+            "mei": "sin",
+            "sei_kana": "i",
+            "mei_kana": "sin",
+            "tel1": "090",
+            "tel2": "2964",
+            "tel3": "6882"
+        }
+    ]
+}
