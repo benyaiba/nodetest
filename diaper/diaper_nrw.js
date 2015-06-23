@@ -1,3 +1,5 @@
+require("./extends.js");
+
 var request = require('request');
 var iconv = require('iconv-lite');
 var fs = require("fs");
@@ -11,8 +13,11 @@ var infoHar = harJson[5];
 var confirmHar = harJson[6];
 
 var charset = "Shift_JIS";
+var timeout = 100;
 
 /**
+ * send request Without Response Wait(use setTimeout)
+ *
  * L size:
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%8cQ%94n%8c%a7&event_type=7&sid=37031&kmws=
  *
@@ -28,7 +33,8 @@ function run() {
     if (!args || args.length == 0) {
         console.log("1 - send confirm mail");
         console.log("2 - get url from confirm mail, set to config.json");
-        console.log("3 - reservation start !!");
+        console.log("3 - get sess id");
+        console.log("4 - reservation start !!");
         return;
     }
     if (args[0] == "1") {
@@ -38,6 +44,9 @@ function run() {
         getUrlFromMail();
     }
     if (args[0] == "3") {
+        getSessId();
+    }
+    if (args[0] == "4") {
         doOrder();
     }
 
@@ -74,39 +83,22 @@ function getUrlFromMail() {
     mailPop3.getUrl();
 }
 
-function doOrder() {
+function getSessId(){
     var config = require("./config.json");
-    async.each(config.personArr, function(person) {
-        doOneOrder(person);
-    }, function(err) {
-        if (err) {
+    var personArr = config.personArr;
+    async.each(personArr, function(person, next){
+        getSessOne(person, next);
+    }, function(err){
+        if(err){
             console.log(err);
-        } else {
-            console.log("## all done ...");
+        }else{
+            fs.createWriteStream("config.json").write(JSON.stringify(config, null, 4));
+            console.log("## write sessId and redirectUrl to config.json done ...");
         }
     });
 }
 
-function doOneOrder(person) {
-    var taskArr = [];
-    taskArr.push(function(next) {
-        next(null, person);
-    });
-    taskArr.push(getSess);
-    taskArr.push(registSess);
-    taskArr.push(postCardNo);
-    taskArr.push(postInfo);
-    taskArr.push(postConfirmDone);
-    async.waterfall(taskArr, function(err) {
-        if (err) {
-            console.log("water fall err:", person.mail, err);
-            return;
-        }
-        console.log("## one person done ...");
-    });
-}
-
-function getSess(person, next) {
+function getSessOne(person, next) {
     var sess = null;
 
     var har = {
@@ -135,11 +127,45 @@ function getSess(person, next) {
         console.log("## sess", sess, redirectUrl);
         person.sess = sess;
         person.sessUrl = redirectUrl;
-        next(null, person);
+        next(null);
     }, charset);
 }
 
+function doOrder() {
+    var config = require("./config.json");
+    async.each(config.personArr, function(person) {
+        doOneOrder(person);
+    }, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("## all done ...");
+        }
+    });
+}
+
+function doOneOrder(person) {
+    var taskArr = [];
+    taskArr.push(function(next) {
+        next(null, person);
+    });
+    taskArr.push(registSess);
+    taskArr.push(postCardNo);
+    taskArr.push(timeoutRun(postInfo, 500));
+    taskArr.push(timeoutRun(postConfirmDone, 500));
+    async.waterfall(taskArr, function(err) {
+        if (err) {
+            console.log("water fall err:", person.mail, err);
+            return;
+        }
+        log("one person done ...", person);
+    });
+}
+
 function registSess(person, next) {
+    log("start");
+    person.time = new Date();
+
     erequest({
         url : person.sessUrl,
         method : "GET",
@@ -159,6 +185,7 @@ function registSess(person, next) {
 }
 
 function postCardNo(person, next) {
+    log("post card no -- begin");
     var har = cardNoHar;
     var params = har.postData.params;
     _setHeaderSess(har.headers, person.sess);
@@ -166,15 +193,16 @@ function postCardNo(person, next) {
     erequest({
         har : har
     }, function(response) {
-        next(null, person);
     }, function(body) {
         if (body.indexOf("パスワード") != -1) {
-            console.log("## postCardNo -- ok");
+            log("post card no -- end",person);
         }
     }, charset);
+    next(null, person);
 }
 
 function postInfo(person, next) {
+    log("post info -- begin");
     var har = infoHar;
     var params = har.postData.params;
     _setHeaderSess(har.headers, person.sess);
@@ -189,33 +217,37 @@ function postInfo(person, next) {
     erequest({
         har : har
     }, function(response) {
-        next(null, person);
     }, function(body) {
         if (body.indexOf("パスワード") != -1) {
-            console.log("## post info -- ok");
+            log("post info -- end", person);
         }
     }, charset);
+    next(null, person);
 }
 
 function postConfirmDone(person, next) {
+    log("post confirm -- begin");
     var har = confirmHar;
     _setHeaderSess(har.headers, person.sess);
     erequest({
         har: har
     }, function(response) {
     }, function(body) {
+
         if (body.indexOf("エラー") != -1) {
-            console.log("post confirm エラー", false);
+            log("post confirm エラー", false);
+//            console.log(body);
         }
+
         if (body.indexOf("予約完了") != -1) {
-            console.log("## post confirm -- ok");
-            console.log("## 【" + person.mail + "】SUCCESS !!");
+            log("post confirm -- done", person);
+            log("【" + person.mail + "】SUCCESS !!");
             next(null, person);
         } else if (body.indexOf("満席") != -1) {
-            console.log("## 【" + person.mail + "】満席しまった ...");
+            ("## 【" + person.mail + "】満席しまった ...", person);
             next(null, person);
         } else {
-            console.log("## resend post confirm done for 【" + person.mail + "】");
+            ("## resend post confirm for 【" + person.mail + "】");
             postConfirmDone(person, next);
         }
     }, charset);
@@ -237,6 +269,37 @@ function _setValue(arr, name, value) {
             item["value"] = value;
         }
     });
+}
+
+function timeoutRun(fn, to){
+    var timeoutSeconde = 0;
+    if(to){
+        timeoutSeconde = to;
+    }else{
+        timeoutSeconde = timeout;
+    }
+    return function(){
+        var argArr = Array.prototype.slice.call(arguments);
+        setTimeout(function(){
+            fn.apply(this, argArr);
+        }, to);
+    }
+}
+
+function log(msg, person){
+    if(person === false){
+        console.log("## " + msg);
+        return;
+    }
+
+    if(person){
+        var time = person.time || new Date();
+        var now = new Date();
+        var costTime = (now.getTime() - time.getTime()) / 1000 + "ms";
+        console.log("## (%s) - %s - cost time %s".format(person.mail, msg, costTime));
+    }else{
+        console.log("## %s - %s".format(msg, new Date().format("h:m:s.S")));
+    }
 }
 
 run();
