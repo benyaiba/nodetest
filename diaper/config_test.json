@@ -1,11 +1,12 @@
 {
     "event_type": "5",
-    "event_id": "5125823757",
+    "event_id": "2076761056",
     "personArr": [
         {
-            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=axi7J45x81Mxd4pCcuLM7AxaAqfMX3MX"
+            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=axi7J45x81Mxd4pCcuLM7AxaAqfMX3MX",
             "sess": "",
             "sessUrl": "",
+            "time": null,
             "card_no": "2800053622758",
             "mail": "yisuren3@hotmail.com",
             "mailPassword": "zhao_HONGSHENG",
