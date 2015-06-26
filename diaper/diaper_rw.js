@@ -272,18 +272,13 @@ function _setValue(arr, name, value) {
 }
 
 function timeoutRun(fn, to){
-    var timeoutSeconde = 0;
-    if(to){
-        timeoutSeconde = to;
-    }else{
-        timeoutSeconde = timeout;
-    }
+    to = to || timeout;
     return function(){
         var argArr = Array.prototype.slice.call(arguments);
         setTimeout(function(){
             fn.apply(this, argArr);
         }, to);
-    }
+    };
 }
 
 function log(msg, person){
@@ -295,8 +290,8 @@ function log(msg, person){
     if(person){
         var time = person.time || new Date();
         var now = new Date();
-        var costTime = (now.getTime() - time.getTime()) / 1000 + "ms";
-        console.log("## (%s) - %s - cost time %s".format(person.mail, msg, costTime));
+        var costTime = (now.getTime() - time.getTime()) / 1000 + "s";
+        console.log("## <%s> - %s - cost time %s".format(person.mail, msg, costTime));
     }else{
         console.log("## %s - %s".format(msg, new Date().format("h:m:s.S")));
     }
