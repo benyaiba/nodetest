@@ -59,20 +59,32 @@
 
     function initOrderForm() {
         $("#orderBtn").on("click", function() {
-            $.ajax({
-                method: "POST",
-                url: "/api/df_order/insert",
-                data: $("form.order").serialize() + "&group_id=" + getGroupId(),
-                timeout: 3000,
-            }).done(function(result) {
-                if(result.error){
-                    showErrorMsg(result.error);
-                }else{
-                    initDfDatatable();
-                }
-            }).fail(function() {
-                showErrorMsg();
-            });
+            $("#orderPop").modal("show");
+        });
+        $("#orderCancel").on("click", function(){
+            $("#orderPop").modal("hide");
+        });
+
+        $("#orderConfirm1, #orderConfirm2").on("click", function(){
+            $("#orderPop").modal("hide");
+            _doOrder();
+        });
+    }
+
+    function _doOrder(){
+        $.ajax({
+            method: "POST",
+            url: "/api/df_order/insert",
+            data: $("form.order").serialize() + "&group_id=" + getGroupId(),
+            timeout: 3000,
+        }).done(function(result) {
+            if(result.error){
+                showErrorMsg(result.error);
+            }else{
+                initDfDatatable();
+            }
+        }).fail(function() {
+            showErrorMsg();
         });
     }
 
@@ -94,7 +106,6 @@
     }
 
     function initTable(dataSet) {
-//        $('#dfDiv').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="dfTable"></table>');
 
         var oTable = $('#dfTable').dataTable({
             "bDestroy": true,
@@ -128,29 +139,43 @@
     }
 
     function initDataTableEvent() {
+
+        $("#deleteCancel").off("click").on("click", function(){
+            $("#deletePop").modal("hide");
+        });
+        $("#deleteConfirm").off("click").on("click", function(){
+            $("#deletePop").modal("hide");
+            _doOrderDelete();
+        });
+
         var oTable = $("#dfTable").dataTable();
         oTable.$("tr").on("click", "input", function(e) {
             var $tr = $(this).closest("tr");
             var rowData = oTable.fnGetData($tr.get(0));
             var id = rowData.id;
+            $("#oderDeleteId").val(id);
+            $("#deletePop").modal("show");
+        });
+    }
 
-            $.ajax({
-                method: "POST",
-                url: "/api/df_order/delete",
-                data: $.param({
-                    "id": id,
-                    "group_id": getGroupId()
-                }),
-                timeout: 3000
-            }).done(function(result) {
-                if (result.error) {
-                    showErrorMsg(result.error);
-                } else {
-                    initDfDatatable();
-                }
-            }).fail(function() {
-                showErrorMsg();
-            });
+    function _doOrderDelete(){
+        var id = $("#oderDeleteId").val();
+        $.ajax({
+            method: "POST",
+            url: "/api/df_order/delete",
+            data: $.param({
+                "id": id,
+                "group_id": getGroupId()
+            }),
+            timeout: 3000
+        }).done(function(result) {
+            if (result.error) {
+                showErrorMsg(result.error);
+            } else {
+                initDfDatatable();
+            }
+        }).fail(function() {
+            showErrorMsg();
         });
     }
 

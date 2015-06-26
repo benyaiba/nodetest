@@ -31,7 +31,10 @@
   </div>
 
   <div class="panel panel-success mainPanel">
-    <div class="panel-heading">订餐信息 <span class="glyphicon glyphicon-link" aria-hidden="true"></span></div>
+    <div class="panel-heading">
+      订餐信息
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    </div>
     <div class="panel-body" id="dfInfoDiv"></div>
   </div>
 
@@ -52,12 +55,61 @@
     </div>
   </div>
 
+
   <div class="panel panel-success mainPanel">
     <div class="panel-heading">订餐一览</div>
     <div class="panel-body" id="dfDiv">
       <table cellpadding="0" cellspacing="0" border="0" class="display" id="dfTable"></table>
     </div>
   </div>
+
+  <!-- order button modal -->
+  <div class="modal fade" id="orderPop">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>你确定要订餐么？</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="orderCancel">我容易忘</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="orderConfirm1">我稍后会付款</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="orderConfirm2">我已经付款</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- order button modal -->
+  <div class="modal fade" id="deletePop">
+    <input type="hidden" id="oderDeleteId" value=""/>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>确定要删除么？</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="deleteCancel">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteConfirm">OK</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 </body>
 </html>
