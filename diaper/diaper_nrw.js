@@ -13,13 +13,14 @@ var infoHar = harJson[5];
 var confirmHar = harJson[6];
 
 var charset = "Shift_JIS";
-var timeout = 100;
+var timeout = 1000;
 
 /**
- * send request Without Response Wait(use setTimeout)
- *
  * L size:
+ * gaoqi:
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%8cQ%94n%8c%a7&event_type=7&sid=37031&kmws=
+ * shengu:
+ * http://aksale.advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%258d%25e9%258b%25ca%258c%25a7&event_type=7&sid=37189&kmws=
  *
  * country for test:
  * http://advs.jp/cp/akachan_sale_pc/search_event_list.cgi?area2=%90%e7%97t%8c%a7&event_type=5&sid=37213&kmws=
@@ -151,8 +152,8 @@ function doOneOrder(person) {
     });
     taskArr.push(registSess);
     taskArr.push(postCardNo);
-    taskArr.push(timeoutRun(postInfo, 550));
-    taskArr.push(timeoutRun(postConfirmDone, 550));
+    taskArr.push(timeoutRun(postInfo, 1200));
+    taskArr.push(timeoutRun(postConfirmDone, 1200));
     async.waterfall(taskArr, function(err) {
         if (err) {
             console.log("water fall err:", person.mail, err);
@@ -235,8 +236,8 @@ function postConfirmDone(person, next) {
     }, function(body) {
 
         if (body.indexOf("エラー") != -1) {
-            log("post confirm エラー", false);
-//            console.log(body);
+            log("post confirm エラー",  person);
+            fileLog(body);
         }
 
         if (body.indexOf("予約完了") != -1) {
@@ -295,6 +296,13 @@ function log(msg, person){
     }else{
         console.log("## %s - %s".format(msg, new Date().format("h:m:s.S")));
     }
+}
+
+function fileLog(content){
+    fs.createWriteStream("log.log", {
+        flags:"r+",
+        encoding: "Shift_JIS"
+    }).write(content);
 }
 
 run();
