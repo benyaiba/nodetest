@@ -1,20 +1,26 @@
-body{
+body {
   padding-left: 10px;
   padding-top: 10px;
 }
 
 .center {
-  text-align:center;
+  text-align: center;
 }
+
 .right {
-  text-align:right;
+  text-align: right;
 }
 
 #errorDiv {
-  display:none;
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  margin-left: -200px;
+  width: 400px;
 }
 
-#content, #name{
+#content,#name {
   width: 300px;
   height: 35px;
 }
@@ -23,8 +29,25 @@ body{
   width: 100%;
 }
 
-.mainPanel{
+.mainPanel {
   width: 900px;
   margin-top: 10px;
   margin-bottom: 0px !important;
+}
+
+.modal {
+  text-align: center;
+}
+
+.modal:before {
+  display: inline-block;
+  vertical-align: middle;
+  content: " ";
+  height: 100%;
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
 }

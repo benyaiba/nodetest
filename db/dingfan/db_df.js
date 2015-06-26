@@ -3,23 +3,23 @@ var mysql = require("mysql");
 
 var conn = null;
 
-// conn = mysql.createConnection({
-// host : "localhost",
-// port : 3306,
-// user : "dev",
-// password : "password",
-// database : "test",
-// timeout : 800
-// });
+ conn = mysql.createConnection({
+ host : "localhost",
+ port : 3306,
+ user : "dev",
+ password : "password",
+ database : "test",
+ timeout : 800
+ });
 
-conn = mysql.createConnection({
-    host: "192.168.196.8",
-    port: 9626,
-    user: "dev",
-    password: "password",
-    database: "test",
-    timeout: 800
-});
+//conn = mysql.createConnection({
+//    host: "192.168.196.8",
+//    port: 9626,
+//    user: "dev",
+//    password: "password",
+//    database: "test",
+//    timeout: 800
+//});
 
 conn.connect(function(err) {
     if (err) {
