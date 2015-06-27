@@ -152,8 +152,8 @@ function doOneOrder(person) {
     });
     taskArr.push(registSess);
     taskArr.push(postCardNo);
-    taskArr.push(timeoutRun(postInfo, 1200));
-    taskArr.push(timeoutRun(postConfirmDone, 1200));
+    taskArr.push(timeoutRun(postInfo, 1500));
+    taskArr.push(timeoutRun(postConfirmDone, 1500));
     async.waterfall(taskArr, function(err) {
         if (err) {
             console.log("water fall err:", person.mail, err);
@@ -299,8 +299,9 @@ function log(msg, person){
 }
 
 function fileLog(content){
+    content = new Date().format("============== M/d - h:m:s ==========") + "\r\n" + content + "\r\n";
     fs.createWriteStream("log.log", {
-        flags:"r+",
+        flags:"a",
         encoding: "Shift_JIS"
     }).write(content);
 }

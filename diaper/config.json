@@ -1,40 +1,23 @@
 {
-    "event_type": "7",
-    "event_id": "3054709296",
+    "event_type": "5",
+    "event_id": "1621416264",
     "personArr": [
         {
-            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=HESYiatD2wQxyT2p32ir446PWmV4GQ2t",
-            "sess": "828c7cc6b3b9574b660dad3d8c8fd81f",
-            "sessUrl": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=HESYiatD2wQxyT2p32ir446PWmV4GQ2t",
+            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=lC2gM3HcuQwvCChTNQdZeISUTvqVPiVx",
+            "sess": "51ceb9740cc97ca301027888bcea4865",
+            "sessUrl": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=lC2gM3HcuQwvCChTNQdZeISUTvqVPiVx",
             "time": null,
-            "card_no": "2800053598237",
-            "mail": "yisuren5@hotmail.com",
+            "card_no": "2800053622758",
+            "mail": "yisuren7@hotmail.com",
             "mailPassword": "zhao_HONGSHENG",
             "password": "1215",
-            "sei": "sin",
-            "mei": "koui",
-            "sei_kana": "sin",
-            "mei_kana": "koui",
+            "sei": "tyo",
+            "mei": "kosei",
+            "sei_kana": "tyo",
+            "mei_kana": "kosei",
             "tel1": "090",
-            "tel2": "2322",
-            "tel3": "1107"
-        },
-        {
-            "url": "https://aksale.advs.jp/cp/akachan_sale_pc/reg?id=uhr3Pd7iRSz6FCHVVuq9T3Azu57hpitv",
-            "sess": "2114886eef3d9eb8cd654ad85dc95ae3",
-            "sessUrl": "https://aksale.advs.jp/cp/akachan_sale_pc/_reg_form.cgi?id=uhr3Pd7iRSz6FCHVVuq9T3Azu57hpitv",
-            "time": null,
-            "card_no": "2800054542017",
-            "mail": "yisuren6@hotmail.com",
-            "mailPassword": "zhao_HONGSHENG",
-            "password": "1215",
-            "sei": "tyou",
-            "mei": "bai",
-            "sei_kana": "tyou",
-            "mei_kana": "bai",
-            "tel1": "090",
-            "tel2": "5204",
-            "tel3": "5310"
+            "tel2": "2964",
+            "tel3": "6882"
         }
     ]
 }

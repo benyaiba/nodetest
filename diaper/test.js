@@ -167,4 +167,11 @@ function p6(){
     },"Shift_JIS");
 }
 
-p6();
+var fs = require("fs");
+function p7(){
+    fs.createWriteStream("log.log", {
+        flags: "a"
+    }).write("bbb");
+}
+
+p7();
