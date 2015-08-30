@@ -35,10 +35,17 @@ var data = {
             "roll_id" : 1002, // change
             "creative_id" : 2, //change
             "order_num" : 2, // change
-            "priority" : 100,
-            "duration" : "00:00:15",
-            "min_duration" : null,
-            "max_duration" : null
+            "priority" : 100, // change
+            "duration" : null, // change
+            "min_duration" : null, // change
+            "max_duration" : null // change
+        },
+        timetalbe: {
+            "co_account_id" : 2, // change
+            "timetable_name" : "test1111", // update
+            "timetable_status" : "active",
+            "origin_time" : "09:00:00", // change
+            "descriptions" : "this is timetable description"
         }
 }
 exports.data = data;

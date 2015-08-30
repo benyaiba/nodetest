@@ -69,14 +69,73 @@ var creatives = [{
     co_account_id: co_account_id
 },{
     co_account_id: co_account_id
+},{
+    co_account_id: co_account_id
+},{
+    co_account_id: co_account_id
+},{
+    co_account_id: co_account_id
+},{
+    co_account_id: co_account_id
+},{//10
+    co_account_id: co_account_id
 }];
 
 var rolls = [{
     co_account_id: co_account_id,
-    settingInfo : [[1,2], [2,1]]
+    settingInfo : [
+    // order_num 1
+    [{
+        "priority" : 100,
+        "duration" : "00:00:15"
+    },{
+        "priority" : 90,
+        "duration" : "00:00:30"
+    }],
+    // order_num 2
+    [{
+        "priority" : 100,
+        "duration" : "00:00:45"
+    },{
+        "priority" : 90,
+        "duration" : "00:00:15"
+    }]
+    // order_num 3
+    [{
+        "priority" : 100,
+        "duration" : "00:00:45"
+    },{
+        "priority" : 90,
+        "duration" : "00:00:15"
+    },{
+        "priority" : 80,
+        "duration" : "00:01:45"
+    }]
+
+    ]
 },{
     co_account_id: co_account_id,
-    settingInfo : [[1,1], [2,1]]
+    settingInfo : [
+
+    // order_num 1
+    [{
+        "priority" : 100,
+        "duration" : "00:01:30"
+    },{
+        "priority" : 90,
+        "duration" : "00:00:45"
+    },{
+        "priority" : 80,
+        "duration" : "00:00:30"
+    }]
+
+    ]
+}]
+
+var timetables = [{
+    co_account_id: co_account_id,
+    origin_time: "02:00:00",
+    settingInfo: [[]]
 }]
 
 function insertCreative(context, outterNext) {
@@ -148,15 +207,15 @@ function insertRollSetting(context, outterNext){
     var creativeIds = context.creativeIds;
     var rollSettings = context.rollSettings;
 
-//    console.log(context);
+    console.log(context);
 
     // get roll setting insert params
     var paramsArr = [];
     rollIds.forEach(function(rollId){
         var rollSetting = rollSettings.shift();
-        rollSetting.forEach(function(settingItem){
-            var orderNum = settingItem[0];
-            var creativeCount = settingItem[1];
+        rollSetting.forEach(function(settingItem, index){
+            var orderNum = index + 1;
+            var creativeCount = settingItem.length;
             for(var i=0; i< creativeCount;i++){
                 var creativeId = creativeIds.shift();
                 var params = extend(baseData.rollSetting, {
@@ -164,6 +223,7 @@ function insertRollSetting(context, outterNext){
                     creative_id: creativeId,
                     order_num: orderNum
                 });
+                params = extend(params, settingItem);
                 paramsArr.push(params);
             }
         });
