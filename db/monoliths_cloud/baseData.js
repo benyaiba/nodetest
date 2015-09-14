@@ -46,6 +46,39 @@ var data = {
             "timetable_status" : "active",
             "origin_time" : "09:00:00", // change
             "descriptions" : "this is timetable description"
+        },
+
+        display_daily_summary: {
+            "display_id": 1,
+            "dsp_id": 1,
+            "creative_id": 1,
+            "target_date" : "2015-09-12",
+            "co_account_id" : 1,
+            "currency_id" : 1,
+            "impression" : 100,
+            "duration" : "01:00:00",
+            "cost" : 123.00000000,
+            "net" : 111.00000000,
+            "content_cost" : 100.00000000,
+            "content_net" : 99.00000000,
+            "update_time" : "2015-09-12 19:18:14",
+            "create_time" : "2011-01-01 00:00:00"
+        },
+        display_summary: {
+            "display_id" : 1,
+            "dsp_id" : 1,
+            "creative_id" : 1,
+            "target_datetime" : "2015-09-12 20:16:05",
+            "co_account_id" : 1,
+            "currency_id" : 1,
+            "impression" : 100,
+            "duration" : "24:00:00",
+            "cost" : 100.00000000,
+            "net" : 100.00000000,
+            "content_cost" : 100.00000000,
+            "content_net" : 100.00000000,
+            "update_time" : "2015-09-12 20:16:48",
+            "create_time" : "2011-01-01 00:00:00"
         }
 }
 exports.data = data;
