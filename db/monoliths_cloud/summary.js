@@ -21,59 +21,65 @@ var baseData = require("./baseData").data;
 //});
 
 /* DEVELOP */
-//var conn = mysql.createConnection({
-//  host     : '192.168.196.10',
-//  port     : '4306',
-//  database : "compass_master_db",
-//  user     : 'root',
-//  password : 'password'
-//});
-//
-//var connCore = mysql.createConnection({
-//    host     : '192.168.196.10',
-//    port     : '4306',
-//    database : "core_master_db",
-//    user     : 'root',
-//    password : 'password'
-//  });
-
-/* HOME */
 var conn = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  database : "monoliths_summary_db",
-  user     : 'dev',
-  password : 'password'
+    host: '192.168.196.10',
+    port: '5301',
+    database: "monoliths_summary_db",
+    user: 'root',
+    password: 'password'
 });
 var connMaster = mysql.createConnection({
-    host     : 'localhost',
-    port     : '3306',
-    database : "monoliths_master_db",
-    user     : 'dev',
-    password : 'password'
-  });
-var connCore = mysql.createConnection({
-    host     : 'localhost',
-    port     : '3306',
-    database : "core_master_db",
-    user     : 'dev',
-    password : 'password'
+    host: '192.168.196.10',
+    port: '5301',
+    database: "monoliths_master_db",
+    user: 'root',
+    password: 'password'
 });
+var connCore = mysql.createConnection({
+    host: '192.168.196.10',
+    port: '5301',
+    database: "core_master_db",
+    user: 'root',
+    password: 'password'
+});
+
+/* HOME */
+//var conn = mysql.createConnection({
+//  host     : 'localhost',
+//  port     : '3306',
+//  database : "monoliths_summary_db",
+//  user     : 'dev',
+//  password : 'password'
+//});
+//var connMaster = mysql.createConnection({
+//    host     : 'localhost',
+//    port     : '3306',
+//    database : "monoliths_master_db",
+//    user     : 'dev',
+//    password : 'password'
+//  });
+//var connCore = mysql.createConnection({
+//    host     : 'localhost',
+//    port     : '3306',
+//    database : "core_master_db",
+//    user     : 'dev',
+//    password : 'password'
+//});
 
 
 var co_account_id = 1;
-var dsp_id = 3;
+var dsp_id = 1;
 var display_id = 2;
-var creative_id = 4;
+var creative_id = 6;
 var currency_id = 1;
 
 // format ... "2015/08/12-1015/09/12"
 // format ... "2015/09/12"
 // format ... "2015/09/12,2015/09/13"
-var duration = "2015/07/12-2015/08/11";
+var duration = "2015/07/10-2015/10/23";
 
 // format ... "2015/08/12 10:00-2015/08/15 11:00"
-var duration_time = "2015/09/06 00:00-2015/09/06 03:00";
+var duration_time = "2015/07/10 10:00-2015/10/23 8:00";
 
 conn.connect();
 connCore.connect();
@@ -238,9 +244,9 @@ function beginTransaction(callback) {
 
 function main(){
     async.waterfall([
-//                     insertDisplayDailySummary
+                     insertDisplayDailySummary
 //                     ,
-                     insertDisplaySummary
+//                     insertDisplaySummary
                       ], function(error) {
         if (error) {
             console.log(error);
