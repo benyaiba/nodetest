@@ -79,7 +79,7 @@ var currency_id = 1;
 var duration = "2015/07/10-2015/11/23";
 
 // format ... "2015/08/12 10:00-2015/08/15 11:00"
-var duration_time = "2015/07/10 10:00-2015/11/23 8:00";
+var duration_time = "2015/07/10 10:00-2015/07/11 8:00";
 
 conn.connect();
 connCore.connect();
@@ -277,9 +277,10 @@ function main(next){
             conn.commit(function(){
                 connCore.commit(function(){
                     connMaster.commit(function(){
-                        process.exit();
                         if(next){
                             next(null);
+                        }else{
+                            process.exit();
                         }
                     });
                 });
@@ -320,10 +321,10 @@ function batchCreate(){
             creative_ids.forEach(function(cid){
                 display_ids.forEach(function(dpid){
                     insertIdArr.push([did, cid, dpid]);
-                    next(null);
-                })
-            })
-        })
+                });
+            });
+        });
+        next(null);
     }
     function loopInsert(next){
         async.eachSeries(insertIdArr, function(idArr, loopNext){

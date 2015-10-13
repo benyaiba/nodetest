@@ -10,9 +10,9 @@ function exhaustive(){
         "d": random(4)
 
     }
-    console.log(map)
 
     var count = 0;
+    var flag = false;
     for(var i =0;i<4;i++){
         count = 0;
         if(map.j.indexOf(i) != -1){
@@ -27,35 +27,40 @@ function exhaustive(){
         if(map.d == i){
             count++;
         }
+        if(count >= 3){
+            flag = true;
+            break;
+        }
     }
-    if(count != 3){
-//        console.log("condition 1 NG");
+    if(flag === false){
+        console.log("condition 1 NG");
         return;
     }
 
+
     if(map.j.indexOf(1) == -1){
-//        console.log("condition 2 NG");
+        console.log("condition 2 NG");
         return;
     }
     if(map.d == 1){
-//        console.log("condition 2 NG");
+        console.log("condition 2 NG");
         return;
     }
     if(map.y.indexOf(0) != -1){
-//        console.log("condition 2 NG");
+        console.log("condition 2 NG");
         return;
     }
 
     if(map.b.indexOf(map.j[0]) != -1 || map.b.indexOf(map.j[1]) != -1){
-//        console.log("condition 3 aaaaa NG");
+        console.log("condition 3 aaaaa NG");
         return;
     }
     if(map.y.indexOf(map.b[0]) == -1 && map.y.indexOf(map.b[1]) == -1){
-//        console.log("condition 3 bbbbb  NG");
+        console.log("condition 3 bbbbb  NG");
         return;
     }
     if(map.b.indexOf(map.d) != -1){
-//        console.log("condition 3 cccccc NG");
+        console.log("condition 3 cccccc NG");
         return;
     }
 
