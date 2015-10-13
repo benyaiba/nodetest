@@ -23,7 +23,7 @@ var baseData = require("./baseData").data;
 /* DEVELOP */
 var conn = mysql.createConnection({
     host: '192.168.196.10',
-    port: '5301',
+    port: '5303',
     database: "monoliths_summary_db",
     user: 'root',
     password: 'password'
@@ -69,17 +69,17 @@ var connCore = mysql.createConnection({
 
 var co_account_id = 1;
 var dsp_id = 1;
-var display_id = 2;
-var creative_id = 6;
+var display_id = 13;
+var creative_id = 5;
 var currency_id = 1;
 
 // format ... "2015/08/12-1015/09/12"
 // format ... "2015/09/12"
 // format ... "2015/09/12,2015/09/13"
-var duration = "2015/07/10-2015/10/23";
+var duration = "2015/07/10-2015/11/23";
 
 // format ... "2015/08/12 10:00-2015/08/15 11:00"
-var duration_time = "2015/07/10 10:00-2015/10/23 8:00";
+var duration_time = "2015/07/10 10:00-2015/11/23 8:00";
 
 conn.connect();
 connCore.connect();
@@ -103,12 +103,12 @@ function insertOneDaily(dateItem, next) {
         "creative_id" : creative_id,
         "target_date" : dateItem,
         "co_account_id" : co_account_id,
-        impression : 101,
-        cost : 11.23
+        impression : random(100000),
+        cost : randomDecimal(2000)
     });
     conn.query(sql, params, function(err) {
         logError(err);
-        console.log("insert one - ", params.target_date);
+//        console.log("insert one - ", params.target_date);
         next(null);
     })
 }
@@ -131,12 +131,12 @@ function insertOne(dateItem, next) {
         "creative_id" : creative_id,
         "target_datetime" : dateItem,
         "co_account_id" : co_account_id,
-        impression : 101,
-        cost : 11.23
+        impression : random(10000),
+        cost : randomDecimal(200)
     });
     conn.query(sql, params, function(err) {
         logError(err);
-        console.log("insert one - ", params.target_datetime);
+//        console.log("insert one - ", params.target_datetime);
         next(null);
     })
 }
@@ -217,6 +217,22 @@ function logError(err) {
     }
 }
 
+function random(max){
+    return parseInt(Math.random() * max) + 1;
+}
+
+function randomDecimal(max, decimalNum){
+    if(!decimalNum){
+        decimalNum = 4;
+    }
+    var multi = 1;
+    for(var i = 0;i< decimalNum; i++){
+        multi  = multi * 10;
+    }
+    var value = Math.floor(Math.random() * max * multi) / multi;
+    return value;
+}
+
 function beginTransaction(callback) {
     conn.beginTransaction(function(err) {
         // start transaction one ...
@@ -242,11 +258,11 @@ function beginTransaction(callback) {
     });
 }
 
-function main(){
+function main(next){
     async.waterfall([
-                     insertDisplayDailySummary
+//                     insertDisplayDailySummary
 //                     ,
-//                     insertDisplaySummary
+                     insertDisplaySummary
                       ], function(error) {
         if (error) {
             console.log(error);
@@ -262,12 +278,75 @@ function main(){
                 connCore.commit(function(){
                     connMaster.commit(function(){
                         process.exit();
+                        if(next){
+                            next(null);
+                        }
                     });
                 });
             });
             console.log("done ...");
+
         }
     });
 }
 
-beginTransaction(main);
+
+function batchCreate(){
+    var dsp_ids = [1,2,3];
+    var creative_ids = [];
+    var display_ids = [];
+    var insertIdArr = [];
+
+    function getCreativeIds(next){
+        var sql = "select creative_id from creative where 1";
+        connCore.query(sql, function(err, result){
+            result.forEach(function(r){
+                creative_ids.push(r.creative_id);
+            });
+            next(null);
+        })
+    }
+    function getDisplayIds(next){
+        var sql = "select display_id from display where 1";
+        connMaster.query(sql, function(err, result){
+            result.forEach(function(r){
+                display_ids.push(r.display_id);
+            });
+            next(null);
+        });
+    }
+    function getInsertIdArr(next){
+        dsp_ids.forEach(function(did){
+            creative_ids.forEach(function(cid){
+                display_ids.forEach(function(dpid){
+                    insertIdArr.push([did, cid, dpid]);
+                    next(null);
+                })
+            })
+        })
+    }
+    function loopInsert(next){
+        async.eachSeries(insertIdArr, function(idArr, loopNext){
+            console.log(idArr);
+            dsp_id = idArr[0];
+            creative_id = idArr[1];
+            display_id = idArr[2];
+            main(loopNext);
+        }, function(err, result){
+            next(null);
+        });
+    }
+
+    async.waterfall([getCreativeIds,
+                     getDisplayIds,
+                     getInsertIdArr,
+                     loopInsert],
+                     function(){
+        console.log("all done");
+    });
+
+}
+
+
+batchCreate();
+//beginTransaction(main);
