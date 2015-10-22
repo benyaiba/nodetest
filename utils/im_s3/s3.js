@@ -1,29 +1,32 @@
 var fs = require("fs");
 var knox = require("knox");
 var client = knox.createClient({
-    key : 'xxx',
-    secret : 'xxxxx',
-    bucket : 'zhaohs-t1'
+    key : "xx",
+    secret : "xx/ojO95",
+    bucket : "zhao-test1"
 });
 
-function list(){
+function list(callback){
+    var resultArr = [];
     client.list({prefix: ""}, function(err, result){
         result.Contents.forEach(function(item){
-            console.log(item.Key);
-        })
+//            console.log(item);
+            resultArr.push(item.Key);
+        });
+        callback(resultArr);
     });
 }
 
-function uploadFile(sourcePath, destPath){
-    var req = client.putFile(sourcePath, destPath, function(err, data){
-        if(err){
+function uploadFile(sourcePath, destPath) {
+    var req = client.putFile(sourcePath, destPath, function(err, data) {
+        if (err) {
             console.log(err)
-        }else{
+        } else {
             console.log("upload to S3 done ...", destPath);
-            fs.unlink(sourcePath, function(err){
-                if(err){
+            fs.unlink(sourcePath, function(err) {
+                if (err) {
                     console.log(err);
-                }else{
+                } else {
                     console.log("delete origin file - ", sourcePath);
                 }
             })
@@ -38,3 +41,4 @@ function uploadFile(sourcePath, destPath){
 //uploadFile(s,d);
 
 exports.uploadFile = uploadFile;
+exports.list = list;
