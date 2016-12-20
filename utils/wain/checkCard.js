@@ -14,7 +14,7 @@ var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
 /* PRODUCT */
-var HOST_IP = "192.168.196.206/wain";
+var HOST_IP = "192.168.196.206";
 var PORT = 80;
 
 /* TEST */
@@ -26,7 +26,7 @@ function getLoginPage(next) {
     var options = {
         hostname: HOST_IP,
         port: PORT,
-        path: "/Users/login",
+        path: "/wain/Users/login",
         method: "GET"
     };
 
@@ -67,7 +67,7 @@ function login(phpCode, token, next) {
     var options = {
         hostname: HOST_IP,
         port: PORT,
-        path: "/Users/login",
+        path: "/wain/Users/login",
         method: "POST",
         headers: {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -81,7 +81,7 @@ function login(phpCode, token, next) {
             "Host": HOST_IP,
             "Origin": "http://" + HOST_IP,
             "Pragma": "no-cache",
-            "Referer": "http://" + HOST_IP + "/Users/login",
+            "Referer": "http://" + HOST_IP + "/wain/Users/login",
             "User-Agent": "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36"
         }
     };
@@ -112,7 +112,7 @@ function getCardPage(phpCode, token, next) {
     var options = {
         hostname: HOST_IP,
         port: PORT,
-        path: "/AttendanceManagement/personalAttendanceSearch",
+        path: "/wain/AttendanceManagement/personalAttendanceSearch",
         method: "GET",
         headers: {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
