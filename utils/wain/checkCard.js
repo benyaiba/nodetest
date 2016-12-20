@@ -14,7 +14,7 @@ var USER_NAME = "zhao_hongsheng";
 var PASS = "zhao_hongsheng";
 
 /* PRODUCT */
-var HOST_IP = "192.168.196.206";
+var HOST_IP = "192.168.196.206/wain";
 var PORT = 80;
 
 /* TEST */
