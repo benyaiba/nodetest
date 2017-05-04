@@ -240,7 +240,7 @@ function checkCard(trs, $) {
             continue;
         } else {
             var beginDate = getYesterday(begin);
-            if (begin == "-" || !isInRange(beginDate, "07:30", "08:30")) {
+            if (begin == "-" || !isInRange(beginDate, "06:30", "08:30")) {
                 var errMsg = "异常的上班签到时间 ：%s".format(begin);
                 errorMsgArr.push(errMsg);
             }
@@ -429,7 +429,7 @@ function getNotification(){
     "\r\n" +
     "如果有问题请联系赵洪生(zhao_hongsheng@microad-tech.com)" +
     "\r\n" +
-    "如果要退订该邮件请修改wain系统密码, http://"+ HOST_IP +
+    "如果要退订该邮件请修改wain系统密码, http://"+ HOST_IP + "/wain" + 
     "\r\n" +
     "如果想订阅该邮件，请将wain系统用户名和密码修改一致。";
     return notification;
